@@ -1,0 +1,97 @@
+<p>
+  Consulta la información sobre el índice testdocs.
+</p>
+
+
+
+
+
+
+<div class="container-fluid conjunto" style="">
+      
+  <div class="row align-items-center">
+      <div class="col-xl-1 col-lg-1 col-md-12 col-xs-12 rounded diagrama" style="min-height: 200px">
+
+        
+          <h5 class="card-title">Filtros</h5>
+          <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0" class="card-subtitle mb-2 text-muted">Por el momento no hay filtros aplicados.</h6>
+          
+
+           <span *ngFor="let ano of aSeleccionados" class="badge badge-success">{{ ano }} x</span>
+
+            <span *ngFor="let tema of tSeleccionados" class="badge badge-success">{{ tema }} x</span>
+
+
+
+          <!--
+          <ul *ngIf="tSeleccionados.length > 0 || aSeleccionados.length > 0" class="list-group list-group-flush">
+            <li *ngFor="let tema of tSeleccionados" class="list-group-item">
+              {{ tema }}
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </li>
+            <li *ngFor="let ano of aSeleccionados" class="list-group-item">{{ ano }}</li>
+          </ul>
+          -->
+          <button *ngIf="tSeleccionados.length > 0 || aSeleccionados.length > 0" (click)="limpiarFiltros()" class="btn btn-info"> Limpiar filtros </button>
+
+        
+      
+      
+      </div>
+      <div class="mr-6 col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded diagrama" style="min-height: 200px">
+        <div id="cbar">
+
+          <div align="center">
+            <mat-spinner
+              class="example-margin"
+              [color]="primary"
+              [mode]="mode"
+              [value]="value"
+              *ngIf="!loaded['dBar1']">
+            </mat-spinner>
+          </div>
+          <p *ngIf="!loaded['dBar1']"> Actualizando las visualizaciones. Un momento... </p>
+
+
+
+          <svg id="dbar"> </svg>
+
+<button (click)="gen_dTemas()"> Actualizar cronología </button>
+          
+        </div>
+      </div>
+      <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded diagrama" style="min-height: 200px">
+        <div id="cbub" >
+
+          <div align="center">
+            <mat-spinner
+              class="example-margin"
+              [color]="primary"
+              [mode]="mode"
+              [value]="value"
+              *ngIf="!loaded['dBub1']">
+            </mat-spinner>
+          </div>
+          <p *ngIf="!loaded['dBub1']"> Cargando las visualizaciones. Un momento... </p>
+
+          <svg id="dbub"> </svg>
+
+          <button (click)="gen_bubbles()"> Actualizar temas </button>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+<button [routerLink]="['/upload']"> Añadir datos </button>
+<button [routerLink]="['']"> Volver al menú </button>
+-->

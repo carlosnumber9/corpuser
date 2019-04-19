@@ -1,0 +1,107 @@
+<p> Gestiona los documentos que componen tu corpus desde esta página. </p>
+
+<div class="row">
+	<h3 class="col-md-12 text-center">Conexión al servidor de Elasticsearch: 
+    <span *ngIf="status == 'OK'" class="badge badge-success"> OK </span>
+    <span *ngIf="status != 'OK'" class="badge badge-danger"> ERROR </span>
+  </h3>
+</div>
+
+
+
+
+<div class="container-fluid conjunto" style="">
+      
+  <div class="row align-items-center">
+
+<div class="card col-xl-4 col-lg-4 col-md-4 col-xs-4">
+  <div class="card-body">
+    <h5 class="card-title">Crea un corpus</h5>
+    <form [formGroup]="form" (ngSubmit)="onSubmit1(form.value)">
+			<input type="text" placeholder="Nombre" id="index" formControlName="index" name="index">
+
+			
+			<button type="submit" [disabled]="!conexion" class="btn btn-primary pull-right">Crear</button>
+		</form>
+  </div>
+</div>
+
+
+
+<div class="card col-xl-8 col-lg-8 col-md-8 col-xs-8">
+  <div class="card-body">
+
+    <h5 class="card-title"> Añade información </h5>
+    <p> Sube documentos al corpus testdocs (Único disponible) </p>
+    <input type="file" accept="application/*" (change)="changeListener($event)" multiple>
+
+  </div>
+</div>
+
+</div>
+</div>
+		
+
+
+
+
+
+
+
+
+<table *ngIf="ficheros.length > 0" class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Nombre</th>
+      <th scope="col">Formato</th>
+      <th scope="col">Opciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let fich of ficheros">
+      <th scope="row">{{ fich.name }}</th>
+      <td> {{ fich.type }} </td>
+      <td> 
+        
+        <button (click)="borrarFich(fich)" class="badge badge-danger"> Quitar de la cola </button>
+        
+        <button (click)="procesarSubida(fich)" class="badge badge-info"> Añadir al corpus </button>
+  
+        <mat-progress-bar mode="determinate" value="{{ fich.prog }}"></mat-progress-bar>
+
+        <span *ngIf="fich.prog == 100" class="badge badge-success">online</span>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+<button *ngIf="ficheros.length > 1" (click)="procesarSubida(ficheros)" class="btn btn-info"> Añadir todo </button>
+
+
+
+
+<form [formGroup]="form" (ngSubmit)="limpiar()">
+
+<span *ngIf="id == 1" class="badge badge-dark">El corpus está vacío</span>
+
+<button *ngIf="id > 1" type="submit" class="btn btn-danger pull-right">Borrar datos del corpus</button>
+
+</form>
+
+
+
+
+
+
+
+<!--
+<button [routerLink]="['/stats']"> Ver estadísticas </button>
+<button [routerLink]="['']"> Volver al menú </button>
+-->

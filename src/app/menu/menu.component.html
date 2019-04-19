@@ -1,0 +1,31 @@
+<p>
+  Bienvenido a la aplicación web de visualización gráfica de conjuntos de datos.
+</p>
+
+<div align="center">
+<mat-spinner
+        class="example-margin"
+        [color]="primary"
+        [mode]="mode"
+        [value]="value"
+        *ngIf="!loaded">
+</mat-spinner>
+</div>
+<p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
+
+
+
+<div class="card col-xl-8 col-lg-8 col-md-8 col-xs-8 offset-xl-2 offset-lg-2 offset-md-2">
+  <ul class="list-group list-group-flush">
+    <li *ngFor="let elem of indices" class="list-group-item"><h6><strong> {{ elem.index }} </strong></h6> {{ elem["docs.count"] }} documentos.</li>
+  </ul>
+</div>
+
+
+
+
+
+<!--
+<button [routerLink]="['upload']"> Añadir datos </button>
+<button [routerLink]="['stats']"> Ver estadísticas </button>
+-->

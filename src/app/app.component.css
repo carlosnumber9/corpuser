@@ -1,0 +1,50 @@
+
+
+
+
+/*
+@font-face {
+    font-family: Open Sans;
+    src: url('https://fonts.googleapis.com/css?family=Open+Sans');
+}
+*/
+
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+
+* {
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+}
+
+
+main {
+    flex: 1;
+    position: relative;
+  }
+
+
+
+#titulo {
+    position: fixed;
+}
+
+#dpags {
+    /*border: 1px solid blue;*/
+    min-height: 700px;
+}
+
+#pag {
+    position: absolute;
+}
+
+footer {
+    /*
+    position: relative;
+    top: 50px;
+    width: 100%;
+    */
+    color: white;
+    background-color: blue;
+}
