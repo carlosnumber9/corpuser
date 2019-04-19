@@ -1,8 +1,8 @@
 # corpuser - Gestión de Corpus Documentales
 
-_Aplicación de visualización de datos procedentes de cualquier conjunto de documentos. Desarrollada con Angular y empleando el uso de un servidor de Elasticsearch previamente instalado de manera local en la máquina que despliega el servicio.
+Aplicación de visualización de datos procedentes de cualquier conjunto de documentos. Desarrollada con Angular y empleando el uso de un servidor de Elasticsearch previamente instalado de manera local en la máquina que despliega el servicio.
 
-Se trata de un proyecto destinado al Trabajo de Fin de Grado para el Grado en Ingeniería Informática por la Universidad Politécnica de Madrid._
+Se trata de un proyecto destinado al Trabajo de Fin de Grado para el Grado en Ingeniería Informática por la Universidad Politécnica de Madrid.
 
 
 
