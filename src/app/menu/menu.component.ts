@@ -37,20 +37,11 @@ export class MenuComponent implements OnInit {
     this.loaded = false;
     this.indexList();
 
-    $('#iniciodiv').addClass('botonactivo');
-    $('#datosdiv').removeClass('botonactivo');
-    $('#statsdiv').removeClass('botonactivo');
+    $('#iniciodiv').css('border', '1px solid black');
+    $('#datosdiv').css('border', 'none');
+    $('#statsdiv').css('border', 'none');
 
-    $('#lista').mouseenter(function(){
-      $('.doccount').finish();
-      $('.doccount').animate({opacity: 1}, 300);
-    });
 
-    $('#lista').mouseleave(function(){
-      $('.doccount').finish();
-      $('.doccount').animate({opacity: 0}, 300);
-
-    });
 
     setTimeout(function(){
       $('.menucontent').animate({opacity: 1}, 300);
