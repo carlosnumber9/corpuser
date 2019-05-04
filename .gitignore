@@ -1,3 +1,7 @@
 node_modules/
 package.json
 package-lock.json
+src/assets/vid/coding.mp4
+src/assets/vid/girls.mp4
+src/assets/vid/keyboard.mp4
+src/assets/vid/sketch.mp4

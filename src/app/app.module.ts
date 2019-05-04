@@ -20,7 +20,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
-
+import { AngularResizedEventModule } from 'angular-resize-event';
 
 
 
@@ -43,7 +43,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     NgxChartsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    RouterModule
+    RouterModule,
+    AngularResizedEventModule
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]

@@ -5,7 +5,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { fadeAnimation } from '../animations';
 
-
+declare var $: any;
 
 @Component({
   selector: 'app-menu',
@@ -37,11 +37,24 @@ export class MenuComponent implements OnInit {
     this.loaded = false;
     this.indexList();
 
-    /*
-    setInterval(() => {
-      this.indices = this.indexList();
-    }, 5000);
-    */
+    $('#iniciodiv').addClass('botonactivo');
+    $('#datosdiv').removeClass('botonactivo');
+    $('#statsdiv').removeClass('botonactivo');
+
+    $('#lista').mouseenter(function(){
+      $('.doccount').finish();
+      $('.doccount').animate({opacity: 1}, 300);
+    });
+
+    $('#lista').mouseleave(function(){
+      $('.doccount').finish();
+      $('.doccount').animate({opacity: 0}, 300);
+
+    });
+
+    setTimeout(function(){
+      $('.menucontent').animate({opacity: 1}, 300);
+    }, 500);
 
 
 

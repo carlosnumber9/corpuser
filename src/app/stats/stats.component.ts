@@ -10,6 +10,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { forceSimulation } from 'd3/index';
 
+declare var $: any;
+
+
 @Component({
   selector: 'app-stats',
   templateUrl: './stats.component.html',
@@ -160,6 +163,10 @@ export class StatsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
+
+
+
+
     this.loaded = {
       dBar1: false,
       dBub1: false
@@ -277,7 +284,7 @@ export class StatsComponent implements OnInit, OnChanges {
         console.error(error);
         console.log("Error intentando recopilar los documentos.");
       }).then(() => {
-        console.log('Éxito!!! Actualizada la lista de documentos.');
+        //console.log('Éxito!!! Actualizada la lista de documentos.');
         console.log("Se extraen en total " + this.lista.length + " documentos.");
       });
 
@@ -736,9 +743,6 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    console.log("ids =");
-    console.log(ids);
-
 
    // Realizamos una petición de multiterm vectors para obtener los temas.
     await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
@@ -747,8 +751,8 @@ export class StatsComponent implements OnInit, OnChanges {
         let terms = {};
         for(let doc of response.docs){
 
-          console.log("Los terms para el documento " + doc._id + " son:");
-          console.log(doc.term_vectors["attachment.content"].terms);
+          //console.log("Los terms para el documento " + doc._id + " son:");
+          //console.log(doc.term_vectors["attachment.content"].terms);
 
 
 

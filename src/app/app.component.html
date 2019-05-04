@@ -8,8 +8,8 @@
   </h1>
 </div>
 
-
-<nav class="navbar navbar-expand-md navbar-light bg-light">
+<!--
+<nav id="navbarr" class="navbar navbar-expand-md navbar-light bg-light">
   <a class="navbar-brand" href="#">Menú</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -28,18 +28,32 @@
     </ul>
   </div>
 </nav>
+-->
+
+<nav class="container-fluid">
+  <div class="row">
+    <div id="iniciodiv" class="col-1 boton border offset-4 align-middle p-1">
+      Inicio 
+    </div>
+    <div id="datosdiv" class="col-2 boton border ml-1 align-middle p-1">
+      Añadir documentos 
+    </div>
+    <div id="statsdiv" class="col-1 boton border ml-1 align-middle p-1">
+      Visualizar datos 
+    </div>
+  </div>
+</nav>
 
 
 
 
 
-
-<main [@fadeAnimation]="getRouterOutletState(o)">
+<main (resized)="onResized($event)" [@fadeAnimation]="getRouterOutletState(o)">
   <router-outlet #o="outlet" id="pag"></router-outlet>
 </main>
 
-
-<nav class="navbar navbar-expand-md navbar-light bg-light">
+<!--
+<nav id="navbar2" class="navbar navbar-expand-md navbar-light bg-light">
   <a class="navbar-brand" href="#">Menú</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -58,7 +72,7 @@
     </ul>
   </div>
 </nav>
-
+-->
 
 
 <footer class="page-footer"> 

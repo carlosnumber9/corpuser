@@ -25,8 +25,33 @@ main {
   }
 
 
+#navbarr {
+    display: inline-block;
+}
 
-#titulo {
+.boton {
+    background-color: rgba(255,255,255,0.7);
+
+    font-size: 1.1rem;
+
+    transition: box-shadow 0.2s ease-in-out;
+
+    cursor: pointer;
+}
+
+.boton:hover {
+    -webkit-box-shadow: 0px 0px 22px -1px rgba(92,92,92,1);
+    -moz-box-shadow: 0px 0px 22px -1px rgba(92,92,92,1);
+    box-shadow: 0px 0px 22px -1px rgba(92,92,92,1);
+
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.botonactivo {
+    border: 1px solid black;
+}
+
+#titulo h1 {
     position: fixed;
 }
 
@@ -44,7 +69,9 @@ footer {
     position: relative;
     top: 50px;
     width: 100%;
+    display: none;
     */
+    opacity: 0;
     color: white;
-    background-color: blue;
+    background-color: rgba(65,65,65,0.7);
 }

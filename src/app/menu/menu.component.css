@@ -1,3 +1,46 @@
 .example-margin {
     margin: 0 10px;
   }
+
+
+
+  #myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    z-index: -2;
+  }
+
+  .wrapppp {
+
+    
+
+    background-color: rgba(255,255,255,0.7);
+
+    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+
+    height: auto;
+  }
+
+
+  #presentacion, h4 {
+    text-align: justify;
+  }
+  
+
+  .menucontent {
+    opacity: 0;
+  }
+
+  .doccount {
+    opacity: 0;
+  }
+
+
+  li.list-group-item {
+    background-color: transparent;
+  }
