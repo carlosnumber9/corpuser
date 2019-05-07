@@ -32,7 +32,7 @@ main {
 .boton {
     background-color: rgba(255,255,255,0.7);
 
-    font-size: 1.1rem;
+    font-size: 1rem;
 
     transition: box-shadow 0.2s ease-in-out;
 
@@ -74,4 +74,21 @@ footer {
     opacity: 0;
     color: white;
     background-color: rgba(65,65,65,0.7);
+}
+
+.upmflogo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: -2;
+}
+
+.upmblogo {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    opacity: 0.2;
+    z-index: -2;
 }

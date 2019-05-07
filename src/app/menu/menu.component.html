@@ -8,20 +8,10 @@
 
 
 
-<div align="center">
-<mat-spinner
-        class="example-margin"
-        [color]="primary"
-        [mode]="mode"
-        [value]="value"
-        *ngIf="!loaded">
-</mat-spinner>
-</div>
-<p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
 
 <div class="container-fluid">
-<div class="menucontent row col-8 offset-2 mt-4">
-  <div id="presentacion" class="menuap col-6">
+<div class="menucontent row col-xl-8 col-lg-12 offset-xl-2 offset-lg-0 mt-4">
+  <div id="presentacion" class="menuap col-xl-6 col-lg-8 col-md-12 mb-4">
   <div class="wrapppp p-3">
     <h4> Bienvenido al servicio web de visualización gráfica de conjuntos de datos. </h4>
     <hr>
@@ -40,10 +30,22 @@
     </p>
   </div>
   </div>
-  <div id="lista" class="menuap col-5">
+  <div id="lista" class="menuap col-xl-5 col-lg-4 col-md-12 mb-4">
   <div class="wrapppp p-3">
     <h4> Consulta la lista actual de conjuntos en línea </h4>
  
+    <div align="center">
+      <mat-spinner
+        class="example-margin"
+        [color]="primary"
+        [mode]="mode"
+        [value]="value"
+        *ngIf="!loaded">
+      </mat-spinner>
+    </div>
+    <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
+
+
     <ul class="list-group list-group-flush">
       <li *ngFor="let elem of indices" class="indice list-group-item"><h6 class="float-left"><strong> {{ elem.index }} </strong></h6> <span class="doccount float-right">{{ elem["docs.count"] }} documentos.</span></li>
     </ul>
