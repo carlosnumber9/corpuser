@@ -21,7 +21,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { AngularResizedEventModule } from 'angular-resize-event';
-
+import { NgDragDropModule } from 'ng-drag-drop';
 
 
 @NgModule({
@@ -44,7 +44,8 @@ import { AngularResizedEventModule } from 'angular-resize-event';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     RouterModule,
-    AngularResizedEventModule
+    AngularResizedEventModule,
+    NgDragDropModule.forRoot()
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]

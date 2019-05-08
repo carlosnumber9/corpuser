@@ -80,6 +80,32 @@ export class MenuComponent implements OnInit {
 
 
 
+fileover(event) {
+  event.preventDefault();
+  let dropzone = $("#dropzone");
+  console.log("Fichero dentro del dropzone");
+  dropzone.finish();
+  dropzone.animate({border: "3px solid green"}, 300);
+
+}
+
+
+fileout(event) {
+
+  event.preventDefault();
+  let dropzone = $("#dropzone");
+  dropzone.finish();
+  dropzone.animate({border: "3px solid gray"}, 300);
+
+}
+
+
+
+
+
+
+
+
 
 
 

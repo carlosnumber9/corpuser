@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { fadeAnimation } from '../animations';
 
+declare var $: any;
+
 
 const URL = 'http://127.0.0.1:8080/fscrawler';
 const URL2 = 'http://127.0.0.1:9200/ingest/pipeline';
@@ -179,7 +181,11 @@ export class UploadComponent implements OnInit {
 
      this.actualizarID();
 
-
+     $("#dropzone")
+     .on("dragenter", this.onDragEnter)
+     .on("dragover", this.onDragOver)
+     .on("dragleave", this.onDragLeave)
+     .on("drop", this.onDrop);
 
 
   }
@@ -275,6 +281,52 @@ export class UploadComponent implements OnInit {
   }
 
 
+  onDragEnter(event) {
+    event.preventDefault();
+    $('#dropzone').css({
+      border: '3px solid green',
+      transition: 'border 200ms ease-in-out'
+    });
+    console.log("Entró");
+    $('#dropzone').css('border', '3px solid green');
+}
+
+onDragOver(event) {
+    event.preventDefault(); 
+}
+
+onDragLeave(event) {
+    event.preventDefault();
+    $('#dropzone').css({
+      border: '3px solid gray',
+      transition: 'border 200ms ease-in-out'
+    });
+    console.log("Salió");
+}
+
+onDrop(event) {
+    event.preventDefault();
+
+    let grupo = event.originalEvent.dataTransfer.files;
+
+    console.log(grupo);
+
+
+    this.ficheros = [];
+
+
+    this.cola = grupo;
+    console.log(this.cola);
+    var readers: FileReader = new FileReader()[this.cola.length];
+      
+
+    for(let fich of this.cola){
+      this.extraerContenido(fich);
+    }
+
+
+
+  }
 
 
 

@@ -1,7 +1,101 @@
-.my-drop-zone { border: dotted 3px lightgray; }
-.nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
-.another-file-over-class { border: dotted 3px green; }
-
-html, body { height: 100%; }
 
 
+/*html, body { height: 100%; }
+*/
+body{
+    margin: 0;
+}
+html{ 
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+    }
+
+
+#dropzone {
+    min-height: 80px;
+
+    border: 3px solid gray;
+    transition: all 200ms ease-in-out;
+}
+
+
+.dragover {
+    border: 3px solid green;
+    transition: border 300ms ease-in-out;
+}
+
+.dragend {
+    border: 3px solid gray;
+    transition: border 300ms ease-in-out;
+}
+
+#arrastra {
+    opacity: 0.7;
+}
+
+
+#inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+    
+
+}
+
+.wrapp {
+
+    background-color: rgba(255,255,255,0.7);
+
+    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+
+    height: auto;
+
+    transition: background-color 300ms ease-in-out;
+  }
+
+
+
+
+
+
+.draggedover {
+    border: 3px solid green;
+
+    transition: border 300ms ease-in-out;
+}
+
+
+#dropzone:hover {
+    border: 3px solid black;
+
+    transition: border 200ms ease-in-out;
+}
+
+
+
+label[for="inputfile"] {
+    color: #fff;
+    background-color: #106BA0;
+    display: inline-block;
+    transition: all .5s;
+    cursor: pointer;
+    width: fit-content;
+    text-align: center;
+}
+
+  
+label[for="inputfile"]:hover {
+    color: #fff;
+    background-color: red;
+
+    transition: background-color 200ms ease-in-out;
+    }
