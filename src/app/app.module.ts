@@ -22,7 +22,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 import { AngularResizedEventModule } from 'angular-resize-event';
 import { NgDragDropModule } from 'ng-drag-drop';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,10 @@ import { NgDragDropModule } from 'ng-drag-drop';
     MatProgressBarModule,
     RouterModule,
     AngularResizedEventModule,
-    NgDragDropModule.forRoot()
+    NgDragDropModule.forRoot(),
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule 
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]

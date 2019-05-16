@@ -6,9 +6,9 @@ import { Document } from '../document.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { ElasticsearchService } from '../elasticsearch.service';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { forceSimulation } from 'd3/index';
+import {FormControl} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 declare var $: any;
 
@@ -26,8 +26,10 @@ export class StatsComponent implements OnInit, OnChanges {
   }
 
 
-
-
+  myControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
+  filteredValue: string[];
 
 
 
@@ -153,6 +155,89 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
+  private async terminos(){
+
+    this.options = [];
+    let terminos = [];
+    let ids = [];
+
+
+      await this.elastic.busqueda('testdocs', this.body)
+        .then(response => {
+          console.log(response);
+
+          for(let elem of response.hits.hits){
+            ids.push(elem._id);
+          }
+
+        }, error => console.log(error));
+    
+
+
+
+
+    // Realizamos una petición de multiterm vectors para obtener los temas.
+    await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
+      response => {
+
+        let terms = {};
+        for(let doc of response.docs){
+
+          //console.log("Los terms para el documento " + doc._id + " son:");
+          //console.log(doc.term_vectors["attachment.content"].terms);
+
+
+
+          Object.assign(terms, doc.term_vectors["attachment.content"].terms);
+        }
+
+        for(let key in terms){
+          terminos.push({
+            "name": key,
+            "value": terms[key].ttf
+          });
+        }
+
+        terminos = terminos
+          .sort((elem1, elem2) => {
+            return (elem1["value"] > elem2["value"]) ? -1 : 1;
+          });
+          //.slice(0, 6);
+
+          console.log("Se sugieren:");
+          console.log(terminos);
+
+          this.options = terminos.map(elem => elem['name']);
+  
+          console.log("Y las opciones son:");
+          console.log(this.options);
+
+      }, (err) => {
+        console.log("Error con los term vectors.");
+        console.log(err);
+      }
+    );
+  }
+
+
+
+
+
+
+
+
+  private _filter(value: string): string[] {
+
+    const filterValue = value.toLowerCase();
+
+
+    
+
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  
+  
+  }
 
 
 
@@ -165,6 +250,13 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
+    this.terminos();
+
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
 
 
     this.loaded = {
