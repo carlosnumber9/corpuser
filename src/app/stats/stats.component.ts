@@ -1100,8 +1100,23 @@ function dragended(d) {
 
 
 
-  public anadirTema(tema: string) {
-    this.tSeleccionados.push(tema);
+
+
+
+  public anadirTema(tema: string): number {
+
+    let indice = this.tSeleccionados.indexOf(tema);
+
+    if(indice < 0) this.tSeleccionados.push(tema);
+    else this.tSeleccionados.splice(indice, 1);
+
+    this.actualizarBody();
+    this.gen_dTemas();
+    
+    console.log(this.tSeleccionados);
+
+    return indice;
+
   }
 
 

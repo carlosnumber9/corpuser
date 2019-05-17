@@ -3,17 +3,11 @@
 </p>
 
 
-
-<div class="form-group">
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Busca un tema concreto">
-</div>
-
-
 <form class="example-form">
   <mat-form-field class="example-full-width">
     <input type="text" placeholder="Busca términos dentro del corpus" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option">
+      <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option" (click)="anadirTema(option)">
         {{option}}
       </mat-option>
     </mat-autocomplete>
