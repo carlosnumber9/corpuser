@@ -25,6 +25,9 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +52,8 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
     NgDragDropModule.forRoot(),
     MatAutocompleteModule,
     MatFormFieldModule,
-    MatInputModule 
+    MatInputModule,
+    FontAwesomeModule
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]

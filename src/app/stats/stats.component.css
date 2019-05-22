@@ -13,3 +13,100 @@
 .axis--x path {
     display: none;
 }
+
+.border {
+    border: 1px solid black !important;
+}
+
+.diag {
+    /*border: 1px solid blue;*/
+}
+
+#cbub, #cbar {
+    /*border: 4px solid red;
+    width: 700px;*/
+}
+
+#cbar {
+    height: 450px;
+}
+
+#cbub {
+    height: 400px;;
+}
+
+.btn-refresh {
+    display: none;
+}
+
+/*
+#refbar, #refbub {
+    display: block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+*/
+
+.filtro {
+
+    font-size: 0.9rem;
+
+    background-color: black;
+    color: white;
+
+    width: 90px;
+    border: 2px solid black;
+    height: auto;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.filtro:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+}
+
+
+
+.rfilter {
+    right: 10px;
+}
+
+/*
+#tsearch {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+*/
+.diagrama {
+
+    background-color: rgba(255,255,255,0.7);
+
+    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+
+    height: auto;
+
+    transition: background-color 300ms ease-in-out;
+
+
+
+}
+
+
+.diagrama:hover {
+    background-color: rgba(255,255,255,1);
+    transition: 300ms ease-in-out;
+  }

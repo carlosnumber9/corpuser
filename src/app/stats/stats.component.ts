@@ -9,6 +9,8 @@ import { ElasticsearchService } from '../elasticsearch.service';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+
 
 declare var $: any;
 
@@ -25,6 +27,9 @@ export class StatsComponent implements OnInit, OnChanges {
     dBub1;
   }
 
+
+  faSync = faSync;
+  faTimes = faTimesCircle;
 
   myControl = new FormControl();
   options: string[] = [];
@@ -264,14 +269,15 @@ export class StatsComponent implements OnInit, OnChanges {
       dBub1: false
     }
 
+    /*
     d3.select('#dbub')
-      .attr('width', '1000')
-      .attr('height', '600');
+      .attr('width', '700')
+      .attr('height', '400');
 
     d3.select('#dbar')
-      .attr('width', '1000')
-      .attr('height', '600');
-
+      .attr('width', '700')
+      .attr('height', '450');
+*/
 
 
     this.body = {
@@ -590,15 +596,14 @@ export class StatsComponent implements OnInit, OnChanges {
 
     // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
     const margin = 60;
-    const width = 700 - 2 * margin;
-    const height = 400 - 2 * margin;
+    const width = 600 - 2 * margin;
+    const height = 350 - 2 * margin;
 
     // ALMACENAMOS EN UNA VARIABLE EL CONTENEDOR SVG
-    const svg = d3.select('#dbar');
-    /*
-      .attr('width', '1000')
-      .attr('height', '600');
-*/
+    const svg = d3.select('#dbar')
+      .attr('width', '600')
+      .attr('height', '370');
+
     // CREAMOS LA REGIÓN DEL DIAGRAMA DENTRO DEL SVG
     const chart = svg.append('g')
       .attr('transform', `translate(${margin}, ${margin})`);
@@ -691,6 +696,16 @@ export class StatsComponent implements OnInit, OnChanges {
         .text(aux + ' ' + rest + ' ' + aux1 + ' sin fecha de publicación conocida.');
     }
    
+
+    let anch = $('#dbar').width();
+    let alt = $('#dbar').height();
+
+$('#refbar').css({
+  position: "relative",
+  top: -alt + 5 + 'px',
+  left: anch + 30 + 'px'
+}).fadeIn();
+
 
 
     // AÑADIMOS UN TEXTO DE TÍTULO PARA EL DIAGRAMA
@@ -878,8 +893,8 @@ export class StatsComponent implements OnInit, OnChanges {
     let that = this;
 
     let margen = 20;
-    const width = 700 - 2 * margen;
-    const height = 400 - 2 * margen;
+    const width = 600 - 2 * margen;
+    const height = 350 - 2 * margen;
     let color = d3.scaleOrdinal(d3.schemeCategory10);
     let factor = d3.min(this.listaH.map((d) => d.value));
     let maximo = d3.max(this.listaH.map((d) => d.value));
@@ -888,11 +903,10 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
     // SELECCIONAMOS EL OBJETO SVG Y LE APLICAMOS LAS DIMENSIONES
-    const svg = d3.select('#dbub');
-    /*
-      .attr('width', 700)
-      .attr('height', 400);
-*/
+    const svg = d3.select('#dbub')
+      .attr('width', 600)
+      .attr('height', 350);
+
 
 
     // ESTABLECEMOS LAS FUERZAS QUE VAN A PRODUCIRSE ENTRE LAS BURBUJAS
@@ -983,6 +997,22 @@ function dragended(d) {
     simulation.alphaTarget(0.1);
 
 }
+
+
+
+let anch = $('#dbub').width();
+let alt = $('#dbub').height();
+
+$('#refbub').css({
+  position: "relative",
+  top: -alt + 25 + 'px',
+  left: anch + 10 + 'px'
+}).fadeIn();
+
+
+
+
+
 
 
     // BORDE DEL DIAGRAMA
@@ -1114,6 +1144,25 @@ function dragended(d) {
     this.gen_dTemas();
     
     console.log(this.tSeleccionados);
+
+    return indice;
+
+  }
+
+
+
+
+  public anadirAno(ano: string): number {
+
+    let indice = this.aSeleccionados.indexOf(ano);
+
+    if(indice < 0) this.aSeleccionados.push(ano);
+    else this.aSeleccionados.splice(indice, 1);
+
+    this.actualizarBody();
+    this.gen_bubbles();
+    
+    console.log(this.aSeleccionados);
 
     return indice;
 
