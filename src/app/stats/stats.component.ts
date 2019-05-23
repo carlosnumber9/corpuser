@@ -35,10 +35,7 @@ export class StatsComponent implements OnInit, OnChanges {
   nFilter = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
-  nSeleccionados: Observable<string[]>;
   filteredValue: string[];
-
-
 
 
   objectKeys = Object.keys;
@@ -193,9 +190,6 @@ export class StatsComponent implements OnInit, OnChanges {
         let terms = {};
         for(let doc of response.docs){
 
-          //console.log("Los terms para el documento " + doc._id + " son:");
-          //console.log(doc.term_vectors["attachment.content"].terms);
-
 
 
           Object.assign(terms, doc.term_vectors["attachment.content"].terms);
@@ -289,12 +283,6 @@ export class StatsComponent implements OnInit, OnChanges {
         map(value => this._filter(value, this.options))
       );
 
-    this.nSeleccionados = this.nFilter.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value, this.nombres))
-      );
-
 
 
 
@@ -345,6 +333,18 @@ export class StatsComponent implements OnInit, OnChanges {
     //ACTUALIZAR LISTA DE DOCUMENTOS EN EL ÍNDICE
     this.lista = this.actualizarDocs();
     Object.assign(this.listaH)
+
+
+    let maximo = $('#diagramas').height();
+    let htitle = $('#listtitle').outerHeight();
+    let hinput = $('#nfilter').outerHeight();
+    let maxcont = 550 - htitle - hinput;
+
+
+    $('#lista').css('min-height', '580px');
+    $('#contlista').css('height',  + maxcont + 'px');
+
+
   }
 
 

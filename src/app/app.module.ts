@@ -24,6 +24,7 @@ import { AngularResizedEventModule } from 'angular-resize-event';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule, MatInputModule  } from '@angular/material';
+import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -33,7 +34,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AppComponent,
     MenuComponent,
     UploadComponent,
-    StatsComponent
+    StatsComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
