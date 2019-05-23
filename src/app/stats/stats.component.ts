@@ -32,8 +32,10 @@ export class StatsComponent implements OnInit, OnChanges {
   faTimes = faTimesCircle;
 
   myControl = new FormControl();
+  nFilter = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
+  nSeleccionados: Observable<string[]>;
   filteredValue: string[];
 
 
@@ -66,6 +68,9 @@ export class StatsComponent implements OnInit, OnChanges {
 
   // aSeleccionados : Lista de años seleccionados para la interactividad del diagrama de barras
   aSeleccionados = [];
+
+  // nombres : Lista de los títulos de los documentos que componen el índice
+  nombres = [];
 
   // idList : Lista de todos los ids de todos los documentos presentes en el corpus.
   idList = [];
@@ -227,19 +232,42 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
+  getNombres() {
+
+    let cuerpo = this.body;
+
+    cuerpo['_source'] = ['title'];
+    cuerpo['size'] = '10000';
+
+    this.elastic.busqueda('testdocs', cuerpo).then(
+      response => {
+
+        let results = response.hits.hits;
+
+        this.nombres = results.map((elem) => elem['_source'].title);
+
+
+      }, error => console.log(error)
+    );
+
+
+  }
 
 
 
 
-  private _filter(value: string): string[] {
+
+
+
+
+
+
+  private _filter(value: string, opciones): string[] {
 
     const filterValue = value.toLowerCase();
 
 
-    
-
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    return opciones.filter(option => option.toLowerCase().includes(filterValue));
   
   
   }
@@ -253,15 +281,21 @@ export class StatsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-
-
     this.terminos();
 
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map(value => this._filter(value, this.options))
       );
+
+    this.nSeleccionados = this.nFilter.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value, this.nombres))
+      );
+
+
 
 
     this.loaded = {
@@ -304,6 +338,7 @@ export class StatsComponent implements OnInit, OnChanges {
     
     this.actualizarID();
 
+    this.getNombres();
 
 
 
@@ -834,7 +869,6 @@ $('#refbar').css({
 
     let ids = [];
 
-
     if(this.aSeleccionados.length == 0) {ids = this.idList}
     else {
       console.log(this.body);
@@ -844,6 +878,9 @@ $('#refbar').css({
 
           for(let elem of response.hits.hits){
             ids.push(elem._id);
+            this.nombres.push({
+              id: elem._id
+            });
           }
 
         }, error => console.log(error));
