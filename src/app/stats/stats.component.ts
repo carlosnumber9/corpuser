@@ -75,6 +75,8 @@ export class StatsComponent implements OnInit, OnChanges {
   // idSel : Selección actual de ids de documentos para mostrar datos.
   idSel = [];
 
+  idSelName = [];
+
   // body : Cuerpo de la petición en curso para mostrar datos.
   body = {
     "query": {},
@@ -171,7 +173,6 @@ export class StatsComponent implements OnInit, OnChanges {
 
       await this.elastic.busqueda('testdocs', this.body)
         .then(response => {
-          console.log(response);
 
           for(let elem of response.hits.hits){
             ids.push(elem._id);
@@ -195,6 +196,7 @@ export class StatsComponent implements OnInit, OnChanges {
           Object.assign(terms, doc.term_vectors["attachment.content"].terms);
         }
 
+      
         for(let key in terms){
           terminos.push({
             "name": key,
@@ -208,13 +210,9 @@ export class StatsComponent implements OnInit, OnChanges {
           });
           //.slice(0, 6);
 
-          console.log("Se sugieren:");
-          console.log(terminos);
 
           this.options = terminos.map(elem => elem['name']);
   
-          console.log("Y las opciones son:");
-          console.log(this.options);
 
       }, (err) => {
         console.log("Error con los term vectors.");
@@ -236,9 +234,14 @@ export class StatsComponent implements OnInit, OnChanges {
     this.elastic.busqueda('testdocs', cuerpo).then(
       response => {
 
+
         let results = response.hits.hits;
 
-        this.nombres = results.map((elem) => elem['_source'].title);
+        this.nombres = results.map((elem) => ({
+          id : elem['_id'],
+          name : elem['_source'].title
+        }));
+
 
 
       }, error => console.log(error)
@@ -247,6 +250,38 @@ export class StatsComponent implements OnInit, OnChanges {
 
   }
 
+
+
+
+  nameStyle() {
+
+    let ids = (this.idSelName.length == 0) ? this.idSel : this.idSelName;
+
+    let that = this;
+
+    $('.nombre').each(function(index, value) {
+
+      let id = $(this).attr('id').replace('nombre', '');
+
+      if(ids.includes(id) && !$(this).hasClass('nombrepresente')) { 
+      
+        $(this).addClass('nombrepresente');
+      }
+      
+      
+      else if (!ids.includes(id) && $(this).hasClass('nombrepresente')) {
+          
+          $(this).removeClass('nombrepresente');
+
+      }
+
+    });
+
+
+
+
+
+  }
 
 
 
@@ -345,7 +380,44 @@ export class StatsComponent implements OnInit, OnChanges {
     $('#contlista').css('height',  + maxcont + 'px');
 
 
+    
+
   }
+
+
+  filtroNombre(id) {
+
+    //let indice = this.idSel.indexOf(id);
+
+    if(!this.idSelName.includes(id)) this.idSelName.push(id);
+    else this.idSelName.splice(this.idSelName.indexOf(id), 1);
+    
+    this.actualizarBody();
+    this.gen_bubbles();
+    this.gen_dTemas();
+    //this.nameStyle();
+
+
+/*
+    if(!this.idSelName.includes(id)) this.idSelName.push(id);
+    else delete this.idSelName[this.idSelName.indexOf(id)];
+
+    console.log(this.idSelName);
+
+
+    this.gen_bubbles();
+    this.gen_dTemas();
+*/
+  }
+
+
+
+
+
+
+
+
+
 
 
   onSelect(event) {
@@ -565,7 +637,7 @@ export class StatsComponent implements OnInit, OnChanges {
       
     }
 
-    for(let elem of result) console.log("Año " + elem.ano + " con " + elem.reps + " documentos.");
+    //for(let elem of result) console.log("Año " + elem.ano + " con " + elem.reps + " documentos.");
     
     result = result.sort((elem1, elem2) => {
       if(elem1["ano"] == "(Desconocido)") return -1;
@@ -594,7 +666,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
     let that = this;
     d3.select('#dbar').html("");
-    this.listaY = [];
+    //this.listaY = [];
 
 
     this.loaded["dBar1"] = false;
@@ -608,18 +680,13 @@ export class StatsComponent implements OnInit, OnChanges {
     // Llamamos al método de búsqueda del servicio de ES y metemos la info en listaY.
     await this.elastic.busqueda('testdocs', this.body)
       .then(response => {
-        console.log("Obtenida la información de documentos por año.");
 
-        for(let elem of response.aggregations.dates.buckets){
+        this.listaY = response.aggregations.dates.buckets.map((elem) => ({
+          ano: new Date(elem.key_as_string).getFullYear(),
+          reps: elem.doc_count
+        }));
 
-          let ano = new Date(elem.key_as_string).getFullYear();
-
-          this.listaY.push({
-            ano: ano,
-            reps: elem.doc_count
-          });
-
-        }
+        this.idSel = response.hits.hits.map((elem) => (elem._id));
 
         rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
 
@@ -627,7 +694,7 @@ export class StatsComponent implements OnInit, OnChanges {
       },
             error => {console.log(error);});
 
-
+      this.nameStyle();
 
     // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
     const margin = 60;
@@ -772,20 +839,18 @@ $('#refbar').css({
 
   // AÑADIMOS LAS FUNCIONES DE INTERACTIVIDAD AL ELEGIR (PULSAR) UN AÑO DEL DIAGRAMA.
   d3.selectAll('.bbar')
-    .on('click', function(actual, i){
+    .on('click', async function(actual, i){
 
       let ano = d3.select(this).attr('id');
-    console.log("Se quiere insertar el año " + ano + " en tSeleccionados.");
+    //console.log("Se quiere insertar el año " + ano + " en tSeleccionados.");
     
-    if(that.aSeleccionados.length == 0) console.log("La lista de años está vacía.");
+    //if(that.aSeleccionados.length == 0) console.log("La lista de años está vacía.");
     
 
-    let indice = that.aSeleccionados.indexOf(ano);
-
-    console.log("indice = " + indice);
 
 
-    if(indice < 0) {
+
+    if(!that.aSeleccionados.includes(ano)) {
       that.aSeleccionados.push(ano);
       d3.select(this).transition()
         .ease(d3.easeBack)
@@ -793,17 +858,31 @@ $('#refbar').css({
         .style("fill", '#00af05');
     }
     else {
-      that.aSeleccionados.splice(indice, 1);
+      that.aSeleccionados.splice(that.aSeleccionados.indexOf(ano), 1);
       d3.select(this).transition()
         .ease(d3.easeBack)
         .duration(200)
         .style("fill", '#00ffff');
     }
 
-    that.actualizarBody();
+/*
+    let indice = that.anadirAno(ano);
+    if(indice < 0) {
+      d3.select(this).transition()
+        .ease(d3.easeBack)
+        .duration(200)
+        .style("fill", '#00af05');
+    }
+    else {
+      d3.select(this).transition()
+        .ease(d3.easeBack)
+        .duration(200)
+        .style("fill", '#00ffff');
+    }
+*/
+    await that.actualizarBody();
     that.gen_bubbles();
     
-    console.log(that.aSeleccionados);
 
 
 
@@ -829,6 +908,8 @@ $('#refbar').css({
     this.loaded["dBar1"] = true;
 
 
+    console.log("Ahora idSel vale:");
+    console.log(this.idSel);
 
 
 
@@ -869,24 +950,26 @@ $('#refbar').css({
 
     let ids = [];
 
-    if(this.aSeleccionados.length == 0) {ids = this.idList}
-    else {
-      console.log(this.body);
+    //if(this.aSeleccionados.length == 0) {ids = this.idList}
+    //else {
       await this.elastic.busqueda('testdocs', this.body)
         .then(response => {
-          console.log(response);
 
-          for(let elem of response.hits.hits){
-            ids.push(elem._id);
-            this.nombres.push({
-              id: elem._id
-            });
-          }
+          this.idSel = response.hits.hits.map((elem) => elem._id);
+          ids = (this.idSelName.length > 0) ? this.idSelName : this.idSel;
+          
+
+
+          //if(this.idSelName.length == 0) this.idSel = ids;
+          //else this.idSel = this.idSelName;
+            //let intersec = ids.filter((elem) => this.idSelName.includes(elem));
+           
+
 
         }, error => console.log(error));
-    }
+    //}
 
-
+    this.nameStyle();
 
    // Realizamos una petición de multiterm vectors para obtener los temas.
     await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
@@ -902,6 +985,7 @@ $('#refbar').css({
 
           Object.assign(terms, doc.term_vectors["attachment.content"].terms);
         }
+
 
         for(let key in terms){
           this.listaH.push({
@@ -1071,7 +1155,7 @@ $('#refbub').css({
   .text('Ideas principales');
 
 
-
+  // AÑADIMOS EL CONTROLADOR PARA LA GESTIÓN DE FILTROS AL ELEGIR UNA BURBUJA
   d3.selectAll('.bbub')
   .on('click', function(actual, i) {
     let tema = d3.select(this).attr('id');
@@ -1079,9 +1163,7 @@ $('#refbub').css({
     
 
     
-
-    let indice = that.tSeleccionados.indexOf(tema);
-    if(indice < 0) {
+    if(!that.tSeleccionados.includes(tema)) {
       that.tSeleccionados.push(tema);
       d3.select(this).transition()
         .ease(d3.easeBack)
@@ -1089,17 +1171,35 @@ $('#refbub').css({
         .style("fill", '#00af05');
     }
     else {
-      that.tSeleccionados.splice(indice, 1);
+      that.tSeleccionados.splice(that.tSeleccionados.indexOf(tema), 1);
       d3.select(this).transition()
         .ease(d3.easeBack)
         .duration(200)
         .style("fill", '#00ffff');
     }
 
+/*
+    let indice = that.anadirTema(tema);
+    if(indice < 0) {
+      d3.select(this).transition()
+        .ease(d3.easeBack)
+        .duration(200)
+        .style("fill", '#00af05');
+    }
+    else {
+      d3.select(this).transition()
+        .ease(d3.easeBack)
+        .duration(200)
+        .style("fill", '#00ffff');
+    }
+*/
+
+
+
+
     that.actualizarBody();
     that.gen_dTemas();
     
-    console.log(that.tSeleccionados);
 
 
   });
@@ -1155,6 +1255,8 @@ $('#refbub').css({
 
 
 
+    console.log("Ahora idSel vale:");
+    console.log(this.idSel);
 
 
 
@@ -1180,7 +1282,6 @@ $('#refbub').css({
     this.actualizarBody();
     this.gen_dTemas();
     
-    console.log(this.tSeleccionados);
 
     return indice;
 
@@ -1199,7 +1300,6 @@ $('#refbub').css({
     this.actualizarBody();
     this.gen_bubbles();
     
-    console.log(this.aSeleccionados);
 
     return indice;
 
@@ -1214,9 +1314,22 @@ $('#refbub').css({
 
 
 
-  actualizarBody() {
+  async actualizarBody() {
 
 
+    //let ids = (this.idSelName.length > 0) ? this.idSelName : this.idSel;
+
+    if(this.idSelName.length > 0){
+      this.body.query["bool"]["filter"] = {
+        ids: {
+          values: this.idSelName
+        }
+      }
+
+    }
+    else {
+      if('filter' in this.body.query["bool"]) delete this.body.query["bool"]["filter"];
+    }
 
       if(this.tSeleccionados.length > 0){
         this.body.query["bool"]["must"] = [{
@@ -1251,9 +1364,12 @@ $('#refbub').css({
           }
       });
       
-      console.log("Se va a poner un filtro entre los años " + d3.min(this.aSeleccionados) + " y " + d3.max(this.aSeleccionados) + ".");
+      //console.log("Se va a poner un filtro entre los años " + d3.min(this.aSeleccionados) + " y " + d3.max(this.aSeleccionados) + ".");
     }
 
+
+    console.log("Ahora idSel vale:");
+    console.log(this.idSel);
 
 
   }
