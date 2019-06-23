@@ -11,6 +11,7 @@ import { MenuComponent } from './menu/menu.component';
 import { UploadComponent } from './upload/upload.component';
 import { StatsComponent } from './stats/stats.component';
 import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
+import { TopicsGraphComponent } from './stats/topics-graph/topics-graph.component';
 
 
 import { ElasticsearchService } from './elasticsearch.service';
@@ -38,7 +39,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     UploadComponent,
     StatsComponent,
     FilterPipe,
-    NoPageFoundComponent
+    NoPageFoundComponent,
+    TopicsGraphComponent
   ],
   imports: [
     BrowserModule,
