@@ -12,6 +12,7 @@ import { UploadComponent } from './upload/upload.component';
 import { StatsComponent } from './stats/stats.component';
 import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
 import { TopicsGraphComponent } from './stats/topics-graph/topics-graph.component';
+import { DocsPerYearGraphComponent } from './stats/docs-per-year-graph/docs-per-year-graph.component';
 
 
 import { ElasticsearchService } from './elasticsearch.service';
@@ -30,7 +31,6 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { DocsPerYearGraphComponent } from './docs-per-year-graph/docs-per-year-graph.component';
 
 
 @NgModule({
