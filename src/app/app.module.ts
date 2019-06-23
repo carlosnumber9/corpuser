@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
 import { UploadComponent } from './upload/upload.component';
 import { StatsComponent } from './stats/stats.component';
+import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
+
 
 import { ElasticsearchService } from './elasticsearch.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -35,7 +37,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MenuComponent,
     UploadComponent,
     StatsComponent,
-    FilterPipe
+    FilterPipe,
+    NoPageFoundComponent
   ],
   imports: [
     BrowserModule,
