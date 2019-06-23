@@ -106,6 +106,10 @@ export class UploadComponent implements OnInit {
 
 
 
+  
+
+
+
 
 
   async procesarSubida(carga) {
