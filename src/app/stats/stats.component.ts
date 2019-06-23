@@ -152,11 +152,11 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-  constructor(private elastic: ElasticsearchService, private _element: ElementRef, private http: HttpClient, private route: ActivatedRoute,
-    private router: Router) {
-    this.host = d3.select(this._element.nativeElement);
+  constructor(
+    private elastic: ElasticsearchService,
+    private route: ActivatedRoute
+    ) {
 
-    //this.chartContainer = this._element.nativeElement.querySelector('chart'));
     this.id = 1;
     this.loaded = {
       dBar1: false,
@@ -177,18 +177,37 @@ export class StatsComponent implements OnInit, OnChanges {
     let ids = [];
 
 
-      console.log("Se llama a terminos() para el índice " + this.index);
-      
       await this.elastic.busqueda(this.index, this.body)
-        .then(response => {
+        .then(
+          response => { 
+     /*       
+            console.log(response);
+            
 
-          for(let elem of response.hits.hits){
-            ids.push(elem._id);
-          }
+            Object.assign(this.listaY, response.hits.hits.map((elem) => {
+                let fecha: number = (new Date(elem._source.attachment.date)).getFullYear();
 
-        }, error => console.log(error));
+                return {
+                  [fecha]: 1
+                }
+
+            }));
+
+            console.log(this.listaY);
+            
+*/
+            ids = response.hits.hits.map((elem) => (elem._id));
+          
+
+
+
+          
+          
+          },
+          error => console.log(error)
+        );
     
-
+        
 
 
 
@@ -197,12 +216,10 @@ export class StatsComponent implements OnInit, OnChanges {
       response => {
 
         let terms = {};
-        for(let doc of response.docs){
 
 
-
-          Object.assign(terms, doc.term_vectors["attachment.content"].terms);
-        }
+        response.docs.map((doc) => (Object.assign(terms, doc.term_vectors["attachment.content"].terms)));
+        
 
       
         for(let key in terms){
@@ -321,6 +338,17 @@ export class StatsComponent implements OnInit, OnChanges {
 
     this.index = this.route.snapshot.params.index;
     
+
+
+    this.body.query = {
+      bool: {
+        must: [
+          {
+            match_all: {}
+          }
+        ]
+      }
+    }
 
 
     this.terminos();
@@ -452,26 +480,14 @@ export class StatsComponent implements OnInit, OnChanges {
     await this.elastic.contarDocs(this.index).then(
       response => {
         this.id = response[0].count;
-        console.log("id actualizado a " + this.id);
       }
     );
 
     // Generamos un array con los ids de los documentos insertados en el índice.
     this.idList = Array.from(new Array(this.id-1),(val,index)=>index+1);
-    console.log("Hay " + this.id + " documentos ahora mismo.");
 
   }
 
-
-
-
-  crearSVG(): void {
-    this.host.html();
-    this.svg = this.host.append('svg')
-      .attr('width', '600')
-      .attr('height', '400')
-      .style('background-color', 'blue');
-  }
 
 
   actualizarDocs(): Document[] {
@@ -494,16 +510,11 @@ export class StatsComponent implements OnInit, OnChanges {
           docRes.push(doc);
         }
 
-        //this.getHV();
-        //this.get_YV();
         this.gen_dTemas();
         this.gen_bubbles();
       }, error => {
         console.error(error);
         console.log("Error intentando recopilar los documentos.");
-      }).then(() => {
-        //console.log('Éxito!!! Actualizada la lista de documentos.');
-        console.log("Se extraen en total " + this.lista.length + " documentos.");
       });
 
     return docRes;
@@ -618,7 +629,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-
+/*
   get_YV(){
 
     let result = [];
@@ -664,7 +675,7 @@ export class StatsComponent implements OnInit, OnChanges {
     this.listaY = result;
 
   }
-
+*/
 
 
 
@@ -703,7 +714,6 @@ export class StatsComponent implements OnInit, OnChanges {
 
         rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
 
-        console.log("Tenemos " + rest + " documentos sin fecha conocida.");
       },
             error => {console.log(error);});
 
@@ -916,20 +926,7 @@ $('#refbar').css({
 
 
 
-
-
     this.loaded["dBar1"] = true;
-
-
-    console.log("Ahora idSel vale:");
-    console.log(this.idSel);
-
-
-
-
-
-
-
 
 
   }

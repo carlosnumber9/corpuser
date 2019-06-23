@@ -33,8 +33,7 @@ export class ElasticsearchService {
 
   private connect(){
     this.client = new Client({
-      host: 'http://localhost:9200',
-      log: 'trace'
+      host: 'http://localhost:9200'
     });
   }
 
@@ -65,7 +64,8 @@ export class ElasticsearchService {
       index: _index,
       type: _type,
       body: this.queryalldocs,
-      filterPath: ['hits.hits._source']
+      filterPath: ['hits.hits._source'],
+      size: 10000
     });
   }
 
@@ -139,7 +139,8 @@ export class ElasticsearchService {
 
     return this.client.search({
       index: index,
-      body: body
+      body: body,
+      size: 10000
     });
 
   }
