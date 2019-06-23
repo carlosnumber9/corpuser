@@ -8,9 +8,9 @@ import { HttpHeaders } from '@angular/common/http';
 import { ElasticsearchService } from '../elasticsearch.service';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith } from 'rxjs/operators';
 import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 declare var $: any;
 
@@ -44,6 +44,11 @@ export class StatsComponent implements OnInit, OnChanges {
   indices: Index[] = [];
   host;
   svg;
+
+
+
+  index: string;
+
 
   // lista : Lista de documentos añadidos para el índice.
   lista: Document[] = [];
@@ -147,7 +152,8 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-  constructor(private elastic: ElasticsearchService, private _element: ElementRef, private http: HttpClient) {
+  constructor(private elastic: ElasticsearchService, private _element: ElementRef, private http: HttpClient, private route: ActivatedRoute,
+    private router: Router) {
     this.host = d3.select(this._element.nativeElement);
 
     //this.chartContainer = this._element.nativeElement.querySelector('chart'));
@@ -171,7 +177,9 @@ export class StatsComponent implements OnInit, OnChanges {
     let ids = [];
 
 
-      await this.elastic.busqueda('testdocs', this.body)
+      console.log("Se llama a terminos() para el índice " + this.index);
+      
+      await this.elastic.busqueda(this.index, this.body)
         .then(response => {
 
           for(let elem of response.hits.hits){
@@ -185,7 +193,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
     // Realizamos una petición de multiterm vectors para obtener los temas.
-    await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
+    await this.elastic.termVectors(this.index, 'attachment.content', ids).then(
       response => {
 
         let terms = {};
@@ -231,7 +239,7 @@ export class StatsComponent implements OnInit, OnChanges {
     cuerpo['_source'] = ['title'];
     cuerpo['size'] = '10000';
 
-    this.elastic.busqueda('testdocs', cuerpo).then(
+    this.elastic.busqueda(this.index, cuerpo).then(
       response => {
 
 
@@ -309,6 +317,11 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+
+
+    this.index = this.route.snapshot.params.index;
+    
+
 
     this.terminos();
 
@@ -436,7 +449,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
   private async actualizarID(){
-    await this.elastic.contarDocs('testdocs').then(
+    await this.elastic.contarDocs(this.index).then(
       response => {
         this.id = response[0].count;
         console.log("id actualizado a " + this.id);
@@ -468,7 +481,7 @@ export class StatsComponent implements OnInit, OnChanges {
     
 
 
-    this.elastic.getAllDocuments('testdocs', 'doc')
+    this.elastic.getAllDocuments(this.index, 'doc')
       .then(response => {
         let resultados = response.hits.hits;
         for (let objeto of resultados) {
@@ -678,7 +691,7 @@ export class StatsComponent implements OnInit, OnChanges {
     
 
     // Llamamos al método de búsqueda del servicio de ES y metemos la info en listaY.
-    await this.elastic.busqueda('testdocs', this.body)
+    await this.elastic.busqueda(this.index, this.body)
       .then(response => {
 
         this.listaY = response.aggregations.dates.buckets.map((elem) => ({
@@ -952,7 +965,7 @@ $('#refbar').css({
 
     //if(this.aSeleccionados.length == 0) {ids = this.idList}
     //else {
-      await this.elastic.busqueda('testdocs', this.body)
+      await this.elastic.busqueda(this.index, this.body)
         .then(response => {
 
           this.idSel = response.hits.hits.map((elem) => elem._id);
@@ -972,6 +985,8 @@ $('#refbar').css({
     this.nameStyle();
 
    // Realizamos una petición de multiterm vectors para obtener los temas.
+   console.log("index = " + this.index);
+   
     await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
       response => {
 

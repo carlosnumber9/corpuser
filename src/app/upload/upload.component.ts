@@ -6,6 +6,8 @@ import { FileSelectDirective, FileDropDirective, FileUploader } from 'ng2-file-u
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { fadeAnimation } from '../animations';
+import { Router, ActivatedRoute } from '@angular/router';
+
 
 declare var $: any;
 
@@ -29,6 +31,7 @@ export class UploadComponent implements OnInit {
   status: string;
   id: number;
   file: File;
+  index: string;
 
   cola: File[];
   ficheros = [];
@@ -82,7 +85,7 @@ export class UploadComponent implements OnInit {
 
       fichero.prog = 50;
 
-    await this.elastic.subirDoc('testdocs', fichero.type, fichero.name, fichero.data, this.id)
+    await this.elastic.subirDoc(this.index, fichero.type, fichero.name, fichero.data, this.id)
       .then(res => {
         console.log("Subida de documento realizada con éxito!!");
         fichero.prog = 100;
@@ -155,7 +158,13 @@ export class UploadComponent implements OnInit {
 
 
 
-  constructor(private http: HttpClient, private fbuilder: FormBuilder, private cd: ChangeDetectorRef, private elastic: ElasticsearchService) { 
+  constructor(
+    private http: HttpClient, 
+    private fbuilder: FormBuilder, 
+    private cd: ChangeDetectorRef, 
+    private elastic: ElasticsearchService,
+    private route: ActivatedRoute
+    ) { 
     this.conexion = false;
     
     this.form = fbuilder.group({
@@ -163,6 +172,8 @@ export class UploadComponent implements OnInit {
     });
     
     this.id = 1;
+
+
   }
 
 
@@ -170,6 +181,9 @@ export class UploadComponent implements OnInit {
 
 
   ngOnInit() {
+
+
+    this.index = this.route.snapshot.params.index;
 
     // CONEXIÓN CON ELASTICSEARCH
     this.elastic.conectado().then(() => {
@@ -198,7 +212,7 @@ export class UploadComponent implements OnInit {
 
 
   private async actualizarID(){
-    await this.elastic.contarDocs('testdocs').then(
+    await this.elastic.contarDocs(this.index).then(
       response => {
         this.id = parseInt(response[0].count) + 1;
         console.log("id actualizado a " + this.id);
@@ -274,7 +288,7 @@ export class UploadComponent implements OnInit {
 
   async limpiar(){
 
-    await this.elastic.clearDB('testdocs')
+    await this.elastic.clearDB(this.index)
       .then(response => {
         console.log(response);
         console.log("Base de datos borrada con éxito.");

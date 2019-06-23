@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   footer = $('footer');
   footerHeight = 0;
   footerTop = '0';
-
+  index: string = 'testdocs';  //MODIFICAR - Hacer genérico
 
 
 
@@ -110,6 +110,7 @@ export class AppComponent implements OnInit {
 
     let that = this;
 
+    /*
     $('.boton').on('click',function() {
       switch($(this).attr('id')){
         case 'iniciodiv':
@@ -117,22 +118,26 @@ export class AppComponent implements OnInit {
           break;
         case 'datosdiv':
           console.log("Entrando en upload...");
-          that.router.navigate(['upload']);
+          console.log("Se usa el index " + this.selectedIndex);
+          
+          that.router.navigate(['upload', this.selectedIndex]);
           break;
         case 'statsdiv':
-          that.router.navigate(['stats']);
+          that.router.navigate(['stats', this.selectedIndex]);
           break;
         default: 
           break;
       }
     });
 
-
+*/
 
 
 
 
   }
+
+
 
 
   
