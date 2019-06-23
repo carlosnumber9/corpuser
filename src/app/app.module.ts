@@ -30,6 +30,7 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { DocsPerYearGraphComponent } from './docs-per-year-graph/docs-per-year-graph.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     StatsComponent,
     FilterPipe,
     NoPageFoundComponent,
-    TopicsGraphComponent
+    TopicsGraphComponent,
+    DocsPerYearGraphComponent
   ],
   imports: [
     BrowserModule,
