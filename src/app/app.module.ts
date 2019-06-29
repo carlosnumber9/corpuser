@@ -13,6 +13,7 @@ import { StatsComponent } from './stats/stats.component';
 import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
 import { TopicsGraphComponent } from './stats/topics-graph/topics-graph.component';
 import { DocsPerYearGraphComponent } from './stats/docs-per-year-graph/docs-per-year-graph.component';
+import { TitleListComponent } from './stats/title-list/title-list.component';
 
 
 import { ElasticsearchService } from './elasticsearch.service';
@@ -42,7 +43,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FilterPipe,
     NoPageFoundComponent,
     TopicsGraphComponent,
-    DocsPerYearGraphComponent
+    DocsPerYearGraphComponent,
+    TitleListComponent
   ],
   imports: [
     BrowserModule,

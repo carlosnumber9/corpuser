@@ -18,6 +18,7 @@ const EPUpload = "http://localhost:4200/api/uploads";
 })
 export class ElasticsearchService {
 
+  // Variables internas del servicio
   private client: Client;
   private datos;
   queryalldocs = {
@@ -26,6 +27,7 @@ export class ElasticsearchService {
     }
   };
 
+  // CONEXIÓN CON EL SERVIDOR
   constructor(private http: HttpClient) {
     if (!this.client){ this.connect(); }
    }
@@ -38,8 +40,17 @@ export class ElasticsearchService {
   }
 
 
+
+
+  // RECOGIDA DE INFORMACIÓN RELATIVA A ÍNDICES
   indexList(){
     return this.client.cat.indices({
+      format: 'json'
+    });
+  }
+
+  contarDocs(index) {
+    return this.client.cat.count({
       format: 'json'
     });
   }
@@ -47,18 +58,16 @@ export class ElasticsearchService {
 
 
 
-
+  // CREACIÓN DE UN ÍNDICE
   createIndex(name): any {
     return this.client.indices.create(name);
   }
 
 
-  addToIndex(value): any {
-    return this.client.create(value);
   
-  }
 
 
+  // LISTADO DE TODOS LOS DOCUMENTOS DE UN ÍNDICE
   getAllDocuments(_index, _type): any {
     return this.client.search({
       index: _index,
@@ -74,6 +83,8 @@ export class ElasticsearchService {
 
 
 
+  // LISTADO DE TODOS LOS TÉRMINOS PARA UN CONJUNTO 
+  // DE DOCUMENTOS DE UN ÍNDICE
   termVectors(index, field, ids): any {
 
     let params = {
@@ -87,9 +98,15 @@ export class ElasticsearchService {
       payloads: false
     }
 
-
-
     return this.client.mtermvectors(params);
+  }
+
+
+
+  // SUBIDA DE UN DOCUMENTO A UN ÍNDICE
+  addToIndex(value): any {
+    return this.client.create(value);
+  
   }
 
 
@@ -113,7 +130,6 @@ export class ElasticsearchService {
       }
     }
 
-
     this.client.ingest.putPipeline(params);
 
     return this.addToIndex({
@@ -132,9 +148,8 @@ export class ElasticsearchService {
 
 
 
-  
 
-
+  // BÚSQUEDA DE INFORMACIÓN ESPECÍFICA DENTRO DE UN ÍNDICE
   busqueda(index, body){
 
     return this.client.search({
@@ -150,52 +165,12 @@ export class ElasticsearchService {
 
 
 
-  contarDocs(index: string) {
-    return this.client.cat.count({
-      format: 'json'
-    });
-  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-  subirDoc(documento: File): Observable<Object>{
-    console.log("Se va a subir el documento " + documento.name);
-
-
-
-
-    const opciones = {
-      headers: new HttpHeaders({
-        'Content-Type' : documento.type
-      })
-    }
-    const fd = new FormData();
-    fd.append('pdf', documento, documento.name);
   
 
 
 
-    return this.http.post(EPFSCrawler + "/_upload", fd, opciones)
-      .pipe(
-        catchError(error => of("Hola" + error))
-      );
-  }
-
-  */
-
+  // COMPROBAR LA CONEXIÓN AL SERVIDOR
   conectado(): any {
     return this.client.ping({
       requestTimeout: Infinity,
@@ -210,6 +185,8 @@ export class ElasticsearchService {
 
 
 
+
+  // ELIMINAR LOS DOCUMENTOS DE UN ÍNDICE
   clearDB(index: string) {
     return this.client.deleteByQuery({
       index: index,

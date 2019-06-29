@@ -9,7 +9,6 @@ const appRoutes = [
     { path: 'upload/:index', component: UploadComponent, data: {animation: 'UploadPage'} },
     { path: 'stats/:index', component: StatsComponent, data: {animation: 'StatsPage'} },
     { path: '**', component: NoPageFoundComponent }
-   // { path: 'stats/:id', component: IndexDataComponent }
 ]
 
 

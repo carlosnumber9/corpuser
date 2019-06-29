@@ -1381,8 +1381,8 @@ $('#refbub').css({
 
 
     console.log("Ahora idSel vale:");
-    console.log(this.idSel);
-
+    console.log(this.body);
+    console.log(JSON.stringify(this.body, null, 4));
 
   }
 
