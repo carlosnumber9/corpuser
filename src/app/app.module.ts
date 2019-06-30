@@ -32,6 +32,7 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IndexListComponent } from './menu/index-list/index-list.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     NoPageFoundComponent,
     TopicsGraphComponent,
     DocsPerYearGraphComponent,
-    TitleListComponent
+    TitleListComponent,
+    IndexListComponent
   ],
   imports: [
     BrowserModule,
