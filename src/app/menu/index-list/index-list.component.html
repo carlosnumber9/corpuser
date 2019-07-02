@@ -1,18 +1,16 @@
-<div id="lista" class="menuap col-xl-5 col-lg-4 col-md-12 mb-4">
-    <div class="wrapppp p-3">
-        <h4> Consulta la lista actual de conjuntos en línea </h4>
+<div class="contenedor">
+    <h4> Consulta la lista actual de conjuntos en línea </h4>
 
-        <div align="center">
-            <mat-spinner class="example-margin" [color]="primary" [mode]="mode" [value]="value" *ngIf="!loaded">
-            </mat-spinner>
-        </div>
-        <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
-
-
-        <ul class="list-group list-group-flush">
-            <li *ngFor="let elem of indices" class="indice list-group-item">
-                <h6 class="float-left"><strong> {{ elem.index }} </strong></h6> <span class="doccount float-right">{{ elem["docs.count"] }} documentos.</span>
-            </li>
-        </ul>
+    <div align="center">
+        <mat-spinner class="example-margin" [color]="color" [value]="value" *ngIf="!loaded || loaded == undefined">
+        </mat-spinner>
     </div>
+    <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
+
+
+    <ul id="list" class="list-group list-group-flush">
+        <li *ngFor="let elem of indices" class="indice list-group-item rounded" id="li{{ elem.index }}">
+            <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6> <span class="badge badge-success doccount btn-select" (click)="onSelectIndex(elem.index)">Seleccionar</span><span class="doccount float-right">{{ elem['docs.count'] }} documentos.</span>
+        </li>
+    </ul>
 </div>

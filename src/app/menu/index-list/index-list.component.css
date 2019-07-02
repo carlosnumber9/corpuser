@@ -1,0 +1,38 @@
+.doccount,
+.btn-select {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    transition: background-color 300ms ease-in-out;
+}
+
+li.list-group-item {
+    background-color: transparent;
+}
+
+.btn-select:hover {
+    cursor: pointer;
+    background-color: lightgreen;
+    transition: background-color 300ms ease-in-out;
+}
+
+.contenedor:hover>ul li .doccount {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
+
+ul li.selected-index {
+    background-color: lightseagreen;
+    transition: background-color 300ms ease-in-out;
+}
+
+ul li.selected-index>.doccount {
+    color: white;
+}
+
+ul li.selected-index>.index-name {
+    color: white;
+}
+
+.selected-index .btn-select {
+    display: none;
+}

@@ -1,64 +1,48 @@
 .example-margin {
     margin: 0 10px;
-  }
+}
 
-
-
-  #myVideo {
+#myVideo {
     position: fixed;
     right: 0;
     bottom: 0;
-    min-width: 100%; 
+    min-width: 100%;
     min-height: 100%;
     z-index: -2;
-  }
+}
 
-  .botonactivo {
+.botonactivo {
     border: 1px solid black;
 }
 
-
-  .wrapppp {
-
-    
-
-    background-color: rgba(255,255,255,0.7);
-
-    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-
+.wrapppp {
+    background-color: rgba(255, 255, 255, 0.7);
+    -webkit-box-shadow: 0px 0px 21px 1px rgba(128, 128, 128, 1);
+    -moz-box-shadow: 0px 0px 21px 1px rgba(128, 128, 128, 1);
+    box-shadow: 0px 0px 21px 1px rgba(128, 128, 128, 1);
     height: auto;
-
     transition: background-color 300ms ease-in-out;
-  }
+}
 
-
-  #presentacion, h4 {
+#presentacion,
+h4 {
     text-align: justify;
-  }
-  
+}
 
-  .menucontent {
+.menucontent {
     opacity: 0;
-  }
+}
 
-  .doccount {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-  }
-
-
-  li.list-group-item {
+li.list-group-item {
     background-color: transparent;
-  }
+}
 
-  .wrapppp:hover {
-    background-color: rgba(255,255,255,1);
+.wrapppp:hover {
+    background-color: rgba(255, 255, 255, 1);
     transition: 300ms ease-in-out;
-  }
+}
 
-  #lista:hover > .wrapppp ul li .doccount {
+#lista:hover>.wrapppp ul li .doccount {
     opacity: 1;
     transition: opacity 300ms ease-in-out;
-  }
+}

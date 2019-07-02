@@ -184,6 +184,8 @@ export class UploadComponent implements OnInit {
 
 
     this.index = this.route.snapshot.params.index;
+    console.log(this.index);
+    
 
     // CONEXIÓN CON ELASTICSEARCH
     this.elastic.conectado().then(() => {
@@ -212,12 +214,7 @@ export class UploadComponent implements OnInit {
 
 
   private async actualizarID(){
-    await this.elastic.contarDocs(this.index).then(
-      response => {
-        this.id = parseInt(response[0].count) + 1;
-        console.log("id actualizado a " + this.id);
-      }
-    );
+    this.id = await this.elastic.contarDocs('testdocs');
   }
 
 

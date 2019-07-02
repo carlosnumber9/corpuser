@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnChanges } from '@angular/core';
 
 import { Client } from 'elasticsearch-browser';
-//import * as elasticsearch from 'elasticsearch-browser';
+// import * as elasticsearch from 'elasticsearch-browser';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Document } from './document.model';
 import { Index } from './index.model';
@@ -9,14 +9,15 @@ import { Observable, of } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { TermVectorsRequest, MultiTermVectorsRequest } from 'elasticsearch-browser';
 
-const EPElastic = "http://localhost:9200";
-const EPFSCrawler = "http://localhost:8080/fscrawler";
-const EPUpload = "http://localhost:4200/api/uploads";
+const EPElastic = 'http://localhost:9200';
+const EPFSCrawler = 'http://localhost:8080/fscrawler';
+const EPUpload = 'http://localhost:4200/api/uploads';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ElasticsearchService {
+  
 
   // Variables internas del servicio
   private client: Client;
@@ -27,8 +28,14 @@ export class ElasticsearchService {
     }
   };
 
+
+private selectedIndex: string;
+
+
+
   // CONEXIÓN CON EL SERVIDOR
   constructor(private http: HttpClient) {
+    this.selectedIndex = '';
     if (!this.client){ this.connect(); }
    }
 
@@ -40,19 +47,44 @@ export class ElasticsearchService {
   }
 
 
+  public getIndex(): Observable<string> {
+    return of(this.selectedIndex);
+  }
+
+  public setIndex(index: string) {
+    this.selectedIndex = index;
+  }
+
 
 
   // RECOGIDA DE INFORMACIÓN RELATIVA A ÍNDICES
-  indexList(){
-    return this.client.cat.indices({
+  indexList(): any {
+
+    const indices = [];
+
+    this.client.cat.indices({
       format: 'json'
+    }).then(response => {
+      response.map((index) =>
+        (indices.push({
+          'index': index['index'],
+          'docs.count': index['docs.count']
+        })));
     });
+
+    return indices;
   }
 
-  contarDocs(index) {
-    return this.client.cat.count({
+
+
+  
+  contarDocs(index): number {
+    let count = 0;
+    this.client.cat.count({
+      index: index,
       format: 'json'
-    });
+    }).then(response => ( count = response[0].count) );
+    return count;
   }
 
 
