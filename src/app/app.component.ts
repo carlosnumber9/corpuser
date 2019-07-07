@@ -3,9 +3,8 @@ import { Component, OnInit, ElementRef, HostListener, OnChanges, SimpleChanges }
 import { fadeAnimation } from './animations';
 
 import { ResizedEvent } from 'angular-resize-event';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { routing } from './app.routing';
 import { ElasticsearchService } from './elasticsearch.service';
 
 
@@ -28,7 +27,9 @@ export class AppComponent implements OnInit {
 
 
 
-  constructor(public router: Router, private elastic: ElasticsearchService) { }
+  constructor(public router: Router, public elastic: ElasticsearchService) {
+    this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
+   }
 
   public getRouterOutletState(outlet) {
     return outlet.isActivated ? outlet.activatedRoute : '';
@@ -97,15 +98,8 @@ export class AppComponent implements OnInit {
 
 
 
-
-
-
-
   ngOnInit(){
-
-    this.selectedIndex = '';
-    this.elastic.getIndex().subscribe((index) => (this.selectedIndex = index));
-
+    
 
     this.stickyFooter();
 
@@ -113,16 +107,7 @@ export class AppComponent implements OnInit {
       $('footer').fadeIn();
     }, 2000);
 
-    let that = this;
-
-
   }
-
-
-
-
-  
-
 
 
 }

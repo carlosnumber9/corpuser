@@ -1,16 +1,23 @@
 <div class="contenedor">
     <h4> Consulta la lista actual de conjuntos en línea </h4>
 
-    <div align="center">
-        <mat-spinner class="example-margin" [color]="color" [value]="value" *ngIf="!loaded || loaded == undefined">
-        </mat-spinner>
+    <div *ngIf="!loaded">
+        <mat-spinner></mat-spinner>
     </div>
     <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
 
 
     <ul id="list" class="list-group list-group-flush">
-        <li *ngFor="let elem of indices" class="indice list-group-item rounded" id="li{{ elem.index }}">
+        <li *ngFor="let elem of indices" class="indice list-group-item rounded" [ngClass]="{'selected-index': selectedIndex === elem.index}" id="li{{ elem.index }}">
             <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6> <span class="badge badge-success doccount btn-select" (click)="onSelectIndex(elem.index)">Seleccionar</span><span class="doccount float-right">{{ elem['docs.count'] }} documentos.</span>
+        </li>
+        <li class="indice list-group-item rounded" id="addIndexLi">
+            <mat-progress-bar *ngIf="!loaded2" mode="indeterminate"></mat-progress-bar>
+            <div *ngIf="loaded2" class="form-group row">
+                <input type="text" class="form-control col-8 mr-4" [(ngModel)]="newIndex" placeholder="... o crea un nuevo índice" />
+                <button class="btn" [ngClass]="{'btn-info': newIndex !== ''}" (click)="onCreateIndex(newIndex)"> Crear </button>
+            </div>
+
         </li>
     </ul>
 </div>

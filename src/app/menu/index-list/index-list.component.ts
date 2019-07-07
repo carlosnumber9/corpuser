@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ElasticsearchService } from 'src/app/elasticsearch.service';
+import { debug } from 'util';
 
 
 
@@ -15,17 +16,21 @@ export class IndexListComponent implements OnInit {
 
 
   loaded = false;
+  loaded2 = false;
   color = 'primary';
   value = 50;
 
   indices: any[];
   selectedIndex: string;
+  newIndex: string;
 
   constructor(private elastic: ElasticsearchService) { }
 
   ngOnInit() {
     this.indexList();
-    this.elastic.getIndex().subscribe((index) => (this.selectedIndex = index));
+    this.newIndex = '';
+
+    this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
   }
 
 
@@ -35,18 +40,27 @@ export class IndexListComponent implements OnInit {
     this.loaded = false;
     this.indices = await this.elastic.indexList();
     this.loaded = true;
+    this.loaded2 = true;
 
   }
 
 
   onSelectIndex(index: string) {
 
-    if(this.selectedIndex) { $('#li' + this.selectedIndex).removeClass('selected-index') }
-    $('#li' + index).addClass('selected-index');
     this.selectedIndex = index;
+    console.debug("[IndexListComponent]   Se ha seleccionado el índice " + this.selectedIndex);
     this.elastic.setIndex(this.selectedIndex);
-    console.log(this.selectedIndex);
 
+  }
+
+  onCreateIndex(index: string) {
+    this.loaded2 = false;
+    this.elastic.createIndex(index)
+      .then((response) => {
+        console.debug("[IndexListComponent]   Índice " + index + " creado correctamente.");
+
+        this.indexList();
+      });
   }
 
 

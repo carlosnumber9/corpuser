@@ -5,7 +5,7 @@ import { Client } from 'elasticsearch-browser';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Document } from './document.model';
 import { Index } from './index.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { TermVectorsRequest, MultiTermVectorsRequest } from 'elasticsearch-browser';
 
@@ -29,14 +29,24 @@ export class ElasticsearchService {
   };
 
 
-private selectedIndex: string;
 
+
+private selectedIndex = '';
+
+  public indexSub;
 
 
   // CONEXIÓN CON EL SERVIDOR
-  constructor(private http: HttpClient) {
+  constructor() {
+
     this.selectedIndex = '';
-    if (!this.client){ this.connect(); }
+
+    if (!this.client){ 
+      this.connect(); 
+    }
+
+    this.indexSub = new BehaviorSubject(this.selectedIndex);
+
    }
 
 
@@ -47,12 +57,18 @@ private selectedIndex: string;
   }
 
 
-  public getIndex(): Observable<string> {
-    return of(this.selectedIndex);
+  public getIndex(): string {
+
+    //return of(this.selectedIndex);
+
+    return this.indexSub.getValue();
+
   }
 
   public setIndex(index: string) {
     this.selectedIndex = index;
+    console.debug("[ElasticsearchService]   selectedIndex = " + this.selectedIndex);
+    this.indexSub.next(this.selectedIndex);
   }
 
 
@@ -91,8 +107,49 @@ private selectedIndex: string;
 
 
   // CREACIÓN DE UN ÍNDICE
-  createIndex(name): any {
-    return this.client.indices.create(name);
+  createIndex(index): any {
+
+    let body = {
+      index: index,
+      body: {
+        "mappings": {
+          "doc": {
+            "properties": {
+              "attachment": {
+                "properties": {
+                  "content": {
+                    "type": "text",
+                    "term_vector": "with_positions_offsets_payloads",
+                    "store": true,
+                    "analyzer": "fulltext_analyzer"
+                    }
+                }
+              }
+            },
+            "_source": {
+              "excludes": ["data"]
+            }
+          }
+        },
+        "settings": {
+          "index": {
+            "number_of_shards": 1,
+            "number_of_replicas": 0
+          },
+          "analysis": {
+            "analyzer": {
+              "fulltext_analyzer": {
+                "type": "standard",
+                "stopwords": [ "a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "en", "entre", "hacia", "hasta", "para", "por", "según", "segun", "sin", "so", "sobre", "tras", "durante", "mediante", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "el", "la", "los", "las", "aquel", "aquella", "aquellas", "aquellos", "esa", "esas", "ese", "esos", "esta", "estas", "este", "estos", "mi", "mis", "tu", "tus", "su", "sus", "nuestra", "nuestro", "nuestras", "nuestros", "vuestra", "vuestro", "vuestras", "vuestros", "suya", "suyo", "suyas", "suyos", "cuanta", "cuánta", "cuántas", "cuanto", "cuánto", "cuántos", "que", "qué", "alguna", "alguno", "algunas", "algunos", "algun", "algún", "bastante", "bastantes", "cada", "ninguna", "ninguno", "ningunas", "ningunos", "ningun", "ningún", "otra", "otro", "otras", "otros", "sendas", "sendos", "tanta", "tanto", "tantas", "tantos", "toda", "todo", "todas", "todos", "una", "uno", "unas", "unos", "un", "varias", "varios", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "es", "al", "sí", "si", "no", "del", "ti", "lo", "se", "dos", "va", "ra", "na", "ve", "da", "me", "ven", "vi", "av", "ll", "iv", "rv", "ad", "pa", "le", "aci", "au", "ct", "lv", "ha", "pro", "rc", "ido", "den", "pt", "nos", "tal", "eso", "era", "ser", "más", "rica", "or", "co", "on", "ca", "in", "to", "ac", "rd", "is", "par", "it", "for", "are", "be", "and", "puede", "pero", "cuando", "son", "como"]
+                }                       
+            }
+          }
+        }
+      }
+    }
+
+
+    return this.client.indices.create(body);
   }
 
 
