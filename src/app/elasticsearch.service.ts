@@ -8,6 +8,7 @@ import { Index } from './index.model';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { TermVectorsRequest, MultiTermVectorsRequest } from 'elasticsearch-browser';
+import { debug } from 'util';
 
 const EPElastic = 'http://localhost:9200';
 const EPFSCrawler = 'http://localhost:8080/fscrawler';
@@ -150,6 +151,17 @@ private selectedIndex = '';
 
 
     return this.client.indices.create(body);
+  }
+
+
+
+
+
+  deleteIndex(index: string) {
+
+    return this.client.indices.delete({index: index})
+      .then((response) => (console.debug("[ElasticsearchService]    Índice" + index + " borrado con éxito.")));
+
   }
 
 

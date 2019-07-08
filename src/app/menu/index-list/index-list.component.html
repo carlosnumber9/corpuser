@@ -1,15 +1,24 @@
 <div class="contenedor">
     <h4> Consulta la lista actual de conjuntos en línea </h4>
 
-    <div *ngIf="!loaded">
-        <mat-spinner></mat-spinner>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <mat-spinner *ngIf="!loaded"></mat-spinner>
+
+            <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
+        </div>
     </div>
-    <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
 
-
-    <ul id="list" class="list-group list-group-flush">
+    <ul id="list" *ngIf="loaded" class="list-group list-group-flush">
         <li *ngFor="let elem of indices" class="indice list-group-item rounded" [ngClass]="{'selected-index': selectedIndex === elem.index}" id="li{{ elem.index }}">
-            <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6> <span class="badge badge-success doccount btn-select" (click)="onSelectIndex(elem.index)">Seleccionar</span><span class="doccount float-right">{{ elem['docs.count'] }} documentos.</span>
+            <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6>
+            <div class="d-flex justify-content-center">
+                <div class="d-flex flex-column">
+                    <span class="badge badge-success doccount btn-select mb-1" (click)="onSelectIndex(elem.index)">Seleccionar</span>
+                    <span class="badge badge-danger doccount btn-delete" (click)="onDeleteIndex(elem.index)">Eliminar</span>
+                </div>
+            </div>
+            <span class="doccount float-right">{{ elem['docs.count'] }} documentos.</span>
         </li>
         <li class="indice list-group-item rounded" id="addIndexLi">
             <mat-progress-bar *ngIf="!loaded2" mode="indeterminate"></mat-progress-bar>

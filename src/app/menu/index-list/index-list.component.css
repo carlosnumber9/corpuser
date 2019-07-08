@@ -1,5 +1,6 @@
 .doccount,
-.btn-select {
+.btn-select,
+.btn-delete {
     opacity: 0;
     transition: opacity 300ms ease-in-out;
     transition: background-color 300ms ease-in-out;
@@ -12,6 +13,12 @@ li.list-group-item {
 .btn-select:hover {
     cursor: pointer;
     background-color: lightgreen;
+    transition: background-color 300ms ease-in-out;
+}
+
+.btn-delete:hover {
+    cursor: pointer;
+    background-color: lightcoral;
     transition: background-color 300ms ease-in-out;
 }
 

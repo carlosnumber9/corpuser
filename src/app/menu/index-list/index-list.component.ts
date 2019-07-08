@@ -64,6 +64,17 @@ export class IndexListComponent implements OnInit {
   }
 
 
+  async onDeleteIndex(index: string) {
+    this.loaded2 = false;
+    this.loaded = false;
+
+    await this.elastic.deleteIndex(index);
+
+    this.indexList();
+
+  }
+
+
 
 
 }
