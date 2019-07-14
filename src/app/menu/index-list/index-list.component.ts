@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ElasticsearchService } from 'src/app/elasticsearch.service';
-import { debug } from 'util';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -14,7 +13,7 @@ declare var $: any;
 })
 export class IndexListComponent implements OnInit {
 
-
+  faTimes = faTimes;
   loaded = false;
   loaded2 = false;
   color = 'primary';
@@ -58,7 +57,7 @@ export class IndexListComponent implements OnInit {
     this.elastic.createIndex(index)
       .then((response) => {
         console.debug("[IndexListComponent]   Índice " + index + " creado correctamente.");
-
+        this.newIndex = "";
         this.indexList();
       });
   }

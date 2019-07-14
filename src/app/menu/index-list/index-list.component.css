@@ -10,6 +10,12 @@ li.list-group-item {
     background-color: transparent;
 }
 
+.btn-delete {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
 .btn-select:hover {
     cursor: pointer;
     background-color: lightgreen;
@@ -42,4 +48,9 @@ ul li.selected-index>.index-name {
 
 .selected-index .btn-select {
     display: none;
+}
+
+li:hover>.btn-delete {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
 }

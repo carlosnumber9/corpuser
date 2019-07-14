@@ -36,7 +36,7 @@ export class StatsComponent implements OnInit, OnChanges {
   options: string[] = [];
   filteredOptions: Observable<string[]>;
   filteredValue: string[];
-
+  searchText = '';
 
   objectKeys = Object.keys;
 
@@ -680,7 +680,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-  private async gen_dTemas() {
+  public async gen_dTemas() {
 
 
     let that = this;
@@ -945,7 +945,7 @@ $('#refbar').css({
 
 
 
-  private async gen_bubbles() {
+  public async gen_bubbles() {
 
 
     d3.select('#dbub').html("");
