@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, OnChanges, NgModule, Directive } from '@angular/core';
 import * as d3 from 'd3';
-//import { layout } from 'd3/index'
+// import { layout } from 'd3/index'
 import { Index } from '../index.model';
 import { Document } from '../document.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -36,7 +36,7 @@ export class StatsComponent implements OnInit, OnChanges {
   options: string[] = [];
   filteredOptions: Observable<string[]>;
   filteredValue: string[];
-
+  searchText = '';
 
   objectKeys = Object.keys;
 
@@ -84,8 +84,8 @@ export class StatsComponent implements OnInit, OnChanges {
 
   // body : Cuerpo de la petición en curso para mostrar datos.
   body = {
-    "query": {},
-    "aggs": {}
+    'query': {},
+    'aggs': {}
 }
 
 
@@ -95,16 +95,16 @@ export class StatsComponent implements OnInit, OnChanges {
   id: number;
   opciones = {
     headers: new HttpHeaders({
-      'Content-Type': "application/json"
+      'Content-Type': 'application/json'
     })
   }
   margin = { top: 20, right: 20, bottom: 30, left: 40 };
   private chartContainer: ElementRef = this.svg;
 
   
-  color = "primary";
+  color = 'primary';
   value = 50;
-  mode = "indeterminate";
+  mode = 'indeterminate';
 
 
 
@@ -421,22 +421,21 @@ export class StatsComponent implements OnInit, OnChanges {
     $('#contlista').css('height',  + maxcont + 'px');
 
 
-    
+
 
   }
 
 
   filtroNombre(id) {
 
-    //let indice = this.idSel.indexOf(id);
+    // let indice = this.idSel.indexOf(id);
 
-    if(!this.idSelName.includes(id)) this.idSelName.push(id);
-    else this.idSelName.splice(this.idSelName.indexOf(id), 1);
-    
+    if(!this.idSelName.includes(id)) { this.idSelName.push(id); } else { this.idSelName.splice(this.idSelName.indexOf(id), 1); }
+
     this.actualizarBody();
     this.gen_bubbles();
     this.gen_dTemas();
-    //this.nameStyle();
+    // this.nameStyle();
 
 
 /*
@@ -463,7 +462,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
   onSelect(event) {
     console.log(event);
-    console.log("Aquí se pueden hacer cositass");
+    console.log('Aquí se pueden hacer cositass');
     console.log(event.name);
   }
 
@@ -477,11 +476,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
   private async actualizarID(){
-    await this.elastic.contarDocs(this.index).then(
-      response => {
-        this.id = response[0].count;
-      }
-    );
+    this.id = await this.elastic.contarDocs('testdocs');
 
     // Generamos un array con los ids de los documentos insertados en el índice.
     this.idList = Array.from(new Array(this.id-1),(val,index)=>index+1);
@@ -499,7 +494,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
     this.elastic.getAllDocuments(this.index, 'doc')
       .then(response => {
-        let resultados = response.hits.hits;
+        const resultados = response.hits.hits;
         for (let objeto of resultados) {
           let doc: Document = {
             fecha: objeto._source.attachment.date,
@@ -514,7 +509,7 @@ export class StatsComponent implements OnInit, OnChanges {
         this.gen_bubbles();
       }, error => {
         console.error(error);
-        console.log("Error intentando recopilar los documentos.");
+        console.log('Error intentando recopilar los documentos.');
       });
 
     return docRes;
@@ -685,7 +680,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-  private async gen_dTemas() {
+  public async gen_dTemas() {
 
 
     let that = this;
@@ -950,7 +945,7 @@ $('#refbar').css({
 
 
 
-  private async gen_bubbles() {
+  public async gen_bubbles() {
 
 
     d3.select('#dbub').html("");

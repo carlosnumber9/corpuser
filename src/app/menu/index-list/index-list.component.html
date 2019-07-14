@@ -1,0 +1,34 @@
+<div class="contenedor">
+    <h4> Consulta la lista actual de conjuntos en línea </h4>
+    <p> Selecciona un corpus para empezar </p>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <mat-spinner *ngIf="!loaded"></mat-spinner>
+
+            <p *ngIf="!loaded"> Cargando la lista de índices. Un momento... </p>
+        </div>
+    </div>
+
+    <ul id="list" *ngIf="loaded" class="list-group list-group-flush">
+        <li *ngFor="let elem of indices" class="indice list-group-item rounded" (click)="onSelectIndex(elem.index)" [ngClass]="{'selected-index': selectedIndex === elem.index}" id="li{{ elem.index }}">
+            <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6>
+            <!--<div class="d-flex justify-content-center">
+                <div class="d-flex flex-column">
+                    <span class="badge badge-success doccount btn-select mb-1" (click)="onSelectIndex(elem.index)">Seleccionar</span>
+                    <span class="badge badge-danger doccount btn-delete" (click)="onDeleteIndex(elem.index)">Eliminar</span>
+                </div>
+            </div>-->
+            <span class="doccount float-right">{{ elem['docs.count'] }} documentos.</span>
+            <span class="badge badge-danger btn-delete" (click)="onDeleteIndex(elem.index)"><fa-icon [icon]="faTimes"></fa-icon></span>
+        </li>
+        <li class="indice list-group-item rounded" id="addIndexLi">
+            <mat-progress-bar *ngIf="!loaded2" mode="indeterminate"></mat-progress-bar>
+            <p *ngIf="!loaded2"> Creando el índice... </p>
+            <div *ngIf="loaded2" class="form-group row">
+                <input type="text" class="form-control col-8 mr-4" [(ngModel)]="newIndex" placeholder="... o crea un nuevo índice" />
+                <button class="btn" [ngClass]="{'btn-info': newIndex !== ''}" (click)="onCreateIndex(newIndex)"> Crear </button>
+            </div>
+
+        </li>
+    </ul>
+</div>

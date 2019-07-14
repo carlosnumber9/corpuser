@@ -1,137 +1,127 @@
 <p>
-  Consulta la información sobre el índice testdocs.
+    Consulta la información sobre el índice testdocs.
 </p>
 
 
-<div class="container-fluid conjunto" style="">
-  <div class="row">
-    <div class="col-xl-10 col-lg-10 col-md-10 col-xs-10 offset-1 diagrama mb-3">
+<div class="container-fluid conjunto">
+    <div class="row">
+        <div class="col-xl-10 col-lg-10 col-md-10 col-xs-10 offset-1 diagrama mb-3">
 
-      <div class="row align-items-center">
+            <div class="row align-items-center">
 
-        <div class="col-1">
-          <h5 class="card-title mt-3 mb-4 float-left mr-4"> Filtros </h5>
+                <div class="col-1">
+                    <h5 class="card-title mt-3 mb-4 float-left mr-4"> Filtros </h5>
+                </div>
+
+                <div id="fcontainer" class="col-8">
+                    <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0" class="card-subtitle text-muted float-left">Por el momento no hay filtros aplicados.</h6>
+
+
+                    <div class="row">
+
+                        <span *ngFor="let ano of aSeleccionados" class="filtro" (click)="anadirAno(ano)"> {{ ano }} <fa-icon class="rfilter float-right" (click)="anadirAno(ano)" [icon]="faTimes"></fa-icon> </span>
+                        <span *ngFor="let tema of tSeleccionados" class="filtro" (click)="anadirTema(tema)"> {{ tema }} <fa-icon class="rfilter float-right" (click)="anadirTema(tema)" [icon]="faTimes"></fa-icon> </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-3">
+
+                    <form id="tsearch" class="example-form float-right">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" placeholder="Busca términos dentro del corpus" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option" (click)="anadirTema(option)">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </form>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div id="fcontainer" class="col-8">
-          <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0" class="card-subtitle text-muted float-left">Por el momento no hay filtros aplicados.</h6>
-          
-          
-          <div class="row">
-          
-            <span *ngFor="let ano of aSeleccionados" class="filtro" (click)="anadirAno(ano)"> {{ ano }} <fa-icon class="rfilter float-right" (click)="anadirAno(ano)" [icon]="faTimes"></fa-icon> </span>
-            <span *ngFor="let tema of tSeleccionados" class="filtro" (click)="anadirTema(tema)"> {{ tema }} <fa-icon class="rfilter float-right" (click)="anadirTema(tema)" [icon]="faTimes"></fa-icon> </span>
-        
-          </div>
-        
-        </div>
-
-        <div class="col-3">
-
-          <form id="tsearch" class="example-form float-right">
-            <mat-form-field class="example-full-width">
-              <input type="text" placeholder="Busca términos dentro del corpus" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
-              <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option" (click)="anadirTema(option)">
-                  {{option}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-
-        </div>
-
-      </div>
 
     </div>
-
-
-  </div>
 </div>
 
 <div class="container-fluid conjunto" style="">
-  <div class="row">
-
-
-    
-      
-      
-      <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
-        
-        
-        <div id="cbar" class="mb-3 diagrama">
-
-          <div class="spinner align-middle" align="center">
-            <mat-spinner
-              class="example-margin"
-              [color]="primary"
-              [mode]="mode"
-              [value]="value"
-              *ngIf="!loaded['dBar1']">
-            </mat-spinner>
-          </div>
-          <p *ngIf="!loaded['dBar1']"> Actualizando las visualizaciones. Un momento... </p>
+    <div class="row">
 
 
 
-          <svg class="diag" id="dbar"> </svg>
 
-          <button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
-         
+
+        <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
+
+
+            <div id="cbar" class="mb-3 diagrama">
+
+                <div class="spinner align-middle" align="center">
+                    <mat-spinner class="example-margin" [color]="color" [mode]="mode" [value]="value" *ngIf="!loaded['dBar1']">
+                    </mat-spinner>
+                </div>
+                <p *ngIf="!loaded['dBar1']"> Actualizando las visualizaciones. Un momento... </p>
+
+
+
+                <svg class="diag" id="dbar"> </svg>
+
+                <button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
+
+            </div>
+
+
+
+            <div id="cbub" class="mb-3 diagrama">
+
+                <div class="spinner align-middle" align="center">
+                    <mat-spinner class="example-margin" [color]="primary" [mode]="mode" [value]="value" *ngIf="!loaded['dBub1']">
+                    </mat-spinner>
+                </div>
+                <p *ngIf="!loaded['dBub1']"> Cargando las visualizaciones. Un momento... </p>
+
+                <svg class="diag" id="dbub"> </svg>
+
+                <button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
+
+
+            </div>
+
+
+
+
+
+
+
+
         </div>
 
 
 
-        <div id="cbub" class="mb-3 diagrama">
-
-          <div class="spinner align-middle" align="center">
-            <mat-spinner
-              class="example-margin"
-              [color]="primary"
-              [mode]="mode"
-              [value]="value"
-              *ngIf="!loaded['dBub1']">
-            </mat-spinner>
-          </div>
-          <p *ngIf="!loaded['dBub1']"> Cargando las visualizaciones. Un momento... </p>
-
-          <svg class="diag" id="dbub"> </svg>
-
-          <button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded" style="min-height: 200px">
 
 
-        </div>
+            <div id="lista" class="col-xl-9 col-lg-9 col-md-12 col-xs-12 diagrama offset-xl-3 offset-lg-3 pt-2 pb-2" style="min-height: 200px">
 
+                <h5 id="listtitle" class="card-title mb-4"> Lista de documentos </h5>
 
+                <form id="nfilter" class="example-form center-block">
+                    <mat-form-field class="example-full-width">
+                        <input type="text" [(ngModel)]="searchText" placeholder="Encuentra documentos" aria-label="Number" matInput [formControl]="nFilter">
+                    </mat-form-field>
+                </form>
 
+                <div id="contlista" class="rounded">
+                    <div (click)="filtroNombre(nombre.id)" id="nombre{{ nombre.id }}" class="nombre text-truncate" *ngFor="let nombre of nombres | filter : searchText"> {{ nombre.name }} </div>
+                </div>
 
+            </div>
 
-
-
-
-      </div>
-
-
-      
-      <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded" style="min-height: 200px">
-        
-        
-        <div id="lista" class="col-xl-9 col-lg-9 col-md-12 col-xs-12 diagrama offset-xl-3 offset-lg-3 pt-2 pb-2" style="min-height: 200px">
-
-          <h5 id="listtitle" class="card-title mb-4"> Lista de documentos </h5>
-          
-          <form id="nfilter" class="example-form center-block">
-            <mat-form-field class="example-full-width">
-              <input type="text" [(ngModel)]="searchText" placeholder="Encuentra documentos" aria-label="Number" matInput [formControl]="nFilter">
-            </mat-form-field>
-          </form>
-
-          <div id="contlista" class="rounded">
-            <div (click)="filtroNombre(nombre.id)" id="nombre{{ nombre.id }}" class="nombre text-truncate" *ngFor="let nombre of nombres | filter : searchText"> {{ nombre.name }} </div>
-          </div>
-
-        </div>
- 
 
 
 
@@ -139,9 +129,8 @@
 
 
 
-      </div>
+        </div>
 
-      
-  </div>
+
+    </div>
 </div>
-

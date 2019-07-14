@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { fadeAnimation } from '../animations';
 import { Router, ActivatedRoute } from '@angular/router';
+import { debug } from 'util';
 
 
 declare var $: any;
@@ -182,8 +183,9 @@ export class UploadComponent implements OnInit {
 
   ngOnInit() {
 
-
     this.index = this.route.snapshot.params.index;
+    console.debug("[UploadComponent]    Se recupera el índice " + this.index + " de la ruta de la aplicación.");
+
 
     // CONEXIÓN CON ELASTICSEARCH
     this.elastic.conectado().then(() => {
@@ -212,12 +214,7 @@ export class UploadComponent implements OnInit {
 
 
   private async actualizarID(){
-    await this.elastic.contarDocs(this.index).then(
-      response => {
-        this.id = parseInt(response[0].count) + 1;
-        console.log("id actualizado a " + this.id);
-      }
-    );
+    this.id = await this.elastic.contarDocs('testdocs');
   }
 
 

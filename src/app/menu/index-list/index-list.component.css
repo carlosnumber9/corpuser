@@ -1,0 +1,56 @@
+.doccount,
+.btn-select,
+.btn-delete {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    transition: background-color 300ms ease-in-out;
+}
+
+li.list-group-item {
+    background-color: transparent;
+}
+
+.btn-delete {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+.btn-select:hover {
+    cursor: pointer;
+    background-color: lightgreen;
+    transition: background-color 300ms ease-in-out;
+}
+
+.btn-delete:hover {
+    cursor: pointer;
+    background-color: lightcoral;
+    transition: background-color 300ms ease-in-out;
+}
+
+.contenedor:hover>ul li .doccount {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
+
+ul li.selected-index {
+    background-color: lightseagreen;
+    transition: background-color 300ms ease-in-out;
+}
+
+ul li.selected-index>.doccount {
+    color: white;
+}
+
+ul li.selected-index>.index-name {
+    color: white;
+}
+
+.selected-index .btn-select {
+    display: none;
+}
+
+li:hover>.btn-delete {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
