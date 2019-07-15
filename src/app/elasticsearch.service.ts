@@ -10,15 +10,20 @@ import { catchError, retry, map } from 'rxjs/operators';
 import { TermVectorsRequest, MultiTermVectorsRequest } from 'elasticsearch-browser';
 import { debug } from 'util';
 
-const EPElastic = 'http://localhost:9200';
-const EPFSCrawler = 'http://localhost:8080/fscrawler';
-const EPUpload = 'http://localhost:4200/api/uploads';
+
+const EP_LOCAL = 'http://localhost:9200';
+const EP_AWS = 'https://vpc-corpuserdb-zkvrzlz3tfccm573zw6wnlp2fi.us-east-2.es.amazonaws.com';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ElasticsearchService {
   
+
+  endpoint = EP_AWS;
+
 
   // Variables internas del servicio
   private client: Client;
@@ -53,7 +58,7 @@ private selectedIndex = '';
 
   private connect(){
     this.client = new Client({
-      host: 'http://localhost:9200'
+      host: this.endpoint
     });
   }
 
