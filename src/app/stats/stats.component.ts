@@ -177,7 +177,7 @@ export class StatsComponent implements OnInit, OnChanges {
     let ids = [];
 
 
-      await this.elastic.busqueda(this.index, this.body)
+      await this.elastic.search(this.index, this.body)
         .then(
           response => { 
      /*       
@@ -212,7 +212,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
     // Realizamos una petición de multiterm vectors para obtener los temas.
-    await this.elastic.termVectors(this.index, 'attachment.content', ids).then(
+    await this.elastic.getTermsList(this.index, 'attachment.content', ids).then(
       response => {
 
         let terms = {};
@@ -256,7 +256,7 @@ export class StatsComponent implements OnInit, OnChanges {
     cuerpo['_source'] = ['title'];
     cuerpo['size'] = '10000';
 
-    this.elastic.busqueda(this.index, cuerpo).then(
+    this.elastic.search(this.index, cuerpo).then(
       response => {
 
 
@@ -434,7 +434,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
     this.actualizarBody();
     this.gen_bubbles();
-    this.gen_dTemas();
+    this.generateBubbleChart();
     // this.nameStyle();
 
 
@@ -476,36 +476,32 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
   private async actualizarID(){
-    this.id = await this.elastic.contarDocs('testdocs');
+    this.id = await this.elastic.countDocs('testdocs');
 
     // Generamos un array con los ids de los documentos insertados en el índice.
-    this.idList = Array.from(new Array(this.id-1),(val,index)=>index+1);
+    this.idList = Array.from(new Array(this.id - 1),(val,index) => index + 1);
 
   }
 
 
 
   actualizarDocs(): Document[] {
-    let docRes: Document[] = [];
-
-
-    
-
+    const docRes: Document[] = [];
 
     this.elastic.getAllDocuments(this.index, 'doc')
       .then(response => {
-        const resultados = response.hits.hits;
-        for (let objeto of resultados) {
-          let doc: Document = {
-            fecha: objeto._source.attachment.date,
-            contenido: objeto._source.attachment.content,
-            nombre: objeto._source.title,
+        const totalDocumentList = response.hits.hits;
+        for (const document of totalDocumentList) {
+          const docToInsert: Document = {
+            fecha: document._source.attachment.date,
+            contenido: document._source.attachment.content,
+            nombre: document._source.title,
             npaginas: 0
           };
-          docRes.push(doc);
+          docRes.push(docToInsert);
         }
 
-        this.gen_dTemas();
+        this.generateBubbleChart();
         this.gen_bubbles();
       }, error => {
         console.error(error);
@@ -609,7 +605,7 @@ export class StatsComponent implements OnInit, OnChanges {
     this.actualizarBody();
 
     this.gen_bubbles();
-    this.gen_dTemas();
+    this.generateBubbleChart();
 
   }
 
@@ -680,24 +676,19 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
 
-  public async gen_dTemas() {
+  public async generateBubbleChart() {
 
-
-    let that = this;
-    d3.select('#dbar').html("");
+    const that = this;
+    d3.select('#dbar').html('');
     //this.listaY = [];
 
-
-    this.loaded["dBar1"] = false;
-
-
+    this.loaded['dBar1'] = false;
 
     let rest = 0;
     // Creamos body, el cuerpo de la petición para sacar los documentos por año.
     
-
     // Llamamos al método de búsqueda del servicio de ES y metemos la info en listaY.
-    await this.elastic.busqueda(this.index, this.body)
+    await this.elastic.search(this.index, this.body)
       .then(response => {
 
         this.listaY = response.aggregations.dates.buckets.map((elem) => ({
@@ -957,7 +948,7 @@ $('#refbar').css({
 
     //if(this.aSeleccionados.length == 0) {ids = this.idList}
     //else {
-      await this.elastic.busqueda(this.index, this.body)
+      await this.elastic.search(this.index, this.body)
         .then(response => {
 
           this.idSel = response.hits.hits.map((elem) => elem._id);
@@ -979,7 +970,7 @@ $('#refbar').css({
    // Realizamos una petición de multiterm vectors para obtener los temas.
    console.log("index = " + this.index);
    
-    await this.elastic.termVectors('testdocs', 'attachment.content', ids).then(
+    await this.elastic.getTermsList('testdocs', 'attachment.content', ids).then(
       response => {
 
         let terms = {};
@@ -1205,7 +1196,7 @@ $('#refbub').css({
 
 
     that.actualizarBody();
-    that.gen_dTemas();
+    that.generateBubbleChart();
     
 
 
@@ -1287,7 +1278,7 @@ $('#refbub').css({
     else this.tSeleccionados.splice(indice, 1);
 
     this.actualizarBody();
-    this.gen_dTemas();
+    this.generateBubbleChart();
     
 
     return indice;

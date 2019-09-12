@@ -86,7 +86,7 @@ export class UploadComponent implements OnInit {
 
       fichero.prog = 50;
 
-    await this.elastic.subirDoc(this.index, fichero.type, fichero.name, fichero.data, this.id)
+    await this.elastic.uploadDocument(this.index, fichero.type, fichero.name, fichero.data, this.id)
       .then(res => {
         console.log("Subida de documento realizada con éxito!!");
         fichero.prog = 100;
@@ -214,7 +214,7 @@ export class UploadComponent implements OnInit {
 
 
   private async actualizarID(){
-    this.id = await this.elastic.contarDocs('testdocs');
+    this.id = await this.elastic.countDocs('testdocs');
   }
 
 
