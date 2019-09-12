@@ -37,7 +37,7 @@ export class IndexListComponent implements OnInit {
   private async indexList() {
 
     this.loaded = false;
-    this.indices = await this.elastic.indexList();
+    this.indices = await this.elastic.getIndexListWithDocCount();
     this.loaded = true;
     this.loaded2 = true;
 
