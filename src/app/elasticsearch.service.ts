@@ -1,4 +1,4 @@
-import { Injectable, OnChanges } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Client } from 'elasticsearch-browser';
 import { BehaviorSubject } from 'rxjs';
 
@@ -19,8 +19,6 @@ export class ElasticsearchService {
 
   private selectedIndex = '';
   public indexSub;
-
-
 
 
   constructor() {
@@ -65,7 +63,7 @@ export class ElasticsearchService {
   /**
    * Retrieves a list of all indices with their document counts
    */
-  getIndexListWithDocCount(): any {
+  public getIndexListWithDocCount(): Object[] {
 
     const indices = [];
 
@@ -283,7 +281,6 @@ export class ElasticsearchService {
   }
 
 
-
   /**
    * Checks connection to Elasticsearch server
    */
@@ -306,7 +303,7 @@ export class ElasticsearchService {
    * Deletes all documents inside an index
    * @param index Index to empty
    */
-  clearDB(index: string) {
+  deleteAllFromIndex(index: string) {
     return this.client.deleteByQuery({
       index: index,
       body: {
