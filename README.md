@@ -1,8 +1,14 @@
-# corpuser - Gestión de Corpus Documentales
+# corpuser - Document collections management
+*Created by Carlos Pinedo*
 
-Aplicación de visualización de datos procedentes de cualquier conjunto de documentos. Desarrollada con Angular y empleando el uso de un servidor de Elasticsearch previamente instalado de manera local en la máquina que despliega el servicio.
+Application for document sets data visualization. Developed on Angular, using a locally installed Elasticsearch server for data model saving.
 
-Se trata de un proyecto destinado al Trabajo de Fin de Grado para el Grado en Ingeniería Informática por la Universidad Politécnica de Madrid.
+This project was made as a Final project for Computer Science Engineering degree from Universidad PolitÃ©cnica de Madrid.
+[Go to project official page](http://oa.upm.es/56331/)
+
+
+
+
 
 
 
