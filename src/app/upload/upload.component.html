@@ -21,8 +21,8 @@
         <div class="upap col-xl-4 col-lg-3 col-md-3 col-xs-3 mb-4 ml-4">
             <div class="wrapp p-4">
                 <h5> Cola de almacenamiento </h5>
-                <p *ngIf="ficheros.length == 0"> Todavía no se han añadido documentos. </p>
-                <table *ngIf="ficheros.length > 0" class="table">
+                <p *ngIf="fileQueue.length == 0"> Todavía no se han añadido documentos. </p>
+                <table *ngIf="fileQueue.length > 0" class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Nombre</th>
@@ -31,7 +31,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let fich of ficheros">
+                        <tr *ngFor="let fich of fileQueue">
                             <th scope="row">{{ fich.name }}</th>
                             <td> {{ fich.type }} </td>
                             <td>
@@ -47,7 +47,7 @@
         </div>
     </div>
 </div>
-<button *ngIf="ficheros.length > 1" (click)="procesarSubida(ficheros)" class="btn btn-info"> Añadir todo </button>
+<button *ngIf="fileQueue.length > 1" (click)="procesarSubida(fileQueue)" class="btn btn-info"> Añadir todo </button>
 <form [formGroup]="form" (ngSubmit)="limpiar()">
     <span *ngIf="id == 1" class="badge badge-dark">El corpus está vacío</span>
     <button *ngIf="id > 1" type="submit" class="btn btn-danger pull-right">Borrar datos del corpus</button>

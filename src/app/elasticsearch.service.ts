@@ -37,7 +37,8 @@ export class ElasticsearchService {
    */
   private connect() {
     this.client = new Client({
-      host: ELASTIC_ENDPOINT
+      host: ELASTIC_ENDPOINT,
+      log: 'trace'
     });
   }
 
@@ -86,12 +87,16 @@ export class ElasticsearchService {
    * Counts the total amount of documents in the index
    * @param index Index name to count documents from
    */
-  public countDocs(index: string): number {
+  public countDocs(index: any): any {
     let count = 0;
+    let indices = [];
+
     this.client.cat.count({
       index: index,
       format: 'json'
-    }).then(response => (count = response[0].count));
+    }).then(response => {
+      console.log(response);
+    });
     return count;
   }
 
