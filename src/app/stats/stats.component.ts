@@ -140,7 +140,10 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    private async terminos() {
+    /**
+     * Assigns to options array the list of all corpus terms
+     */
+    private async getTotalTermNameList() {
 
         this.options = [];
         let terminos = [];
@@ -150,25 +153,7 @@ export class StatsComponent implements OnInit, OnChanges {
         await this.elastic.search(this.index, this.body)
             .then(
                 response => {
-                    /*
-                           console.log(response);
-
-
-                           Object.assign(this.listaY, response.hits.hits.map((elem) => {
-                               let fecha: number = (new Date(elem._source.attachment.date)).getFullYear();
-
-                               return {
-                                 [fecha]: 1
-                               }
-
-                           }));
-
-                           console.log(this.listaY);
-
-               */
                     ids = response.hits.hits.map((elem) => (elem._id));
-
-
                 },
                 error => console.log(error)
             );
@@ -179,11 +164,7 @@ export class StatsComponent implements OnInit, OnChanges {
             response => {
 
                 let terms = {};
-
-
                 response.docs.map((doc) => (Object.assign(terms, doc.term_vectors['attachment.content'].terms)));
-
-
                 for (let key in terms) {
                     terminos.push({
                         'name': key,
@@ -197,9 +178,7 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 //.slice(0, 6);
 
-
                 this.options = terminos.map(elem => elem['name']);
-
 
             }, (err) => {
                 console.log('Error con los term vectors.');
@@ -209,7 +188,10 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    getNombres() {
+    /**
+     * Assigns to nombres array the list of document titles matching current filters
+     */
+    getDocumentTitles() {
 
         let cuerpo = this.body;
 
@@ -219,18 +201,14 @@ export class StatsComponent implements OnInit, OnChanges {
         this.elastic.search(this.index, cuerpo).then(
             response => {
 
-
                 let results = response.hits.hits;
-
                 this.nombres = results.map((elem) => ({
                     id: elem['_id'],
                     name: elem['_source'].title
                 }));
 
-
             }, error => console.log(error)
         );
-
 
     }
 
@@ -238,7 +216,6 @@ export class StatsComponent implements OnInit, OnChanges {
     nameStyle() {
 
         let ids = (this.idSelName.length == 0) ? this.idSel : this.idSelName;
-
         let that = this;
 
         $('.nombre').each(function (index, value) {
@@ -246,36 +223,23 @@ export class StatsComponent implements OnInit, OnChanges {
             let id = $(this).attr('id').replace('nombre', '');
 
             if (ids.includes(id) && !$(this).hasClass('nombrepresente')) {
-
                 $(this).addClass('nombrepresente');
             } else if (!ids.includes(id) && $(this).hasClass('nombrepresente')) {
-
                 $(this).removeClass('nombrepresente');
-
             }
-
         });
-
-
     }
 
 
     private _filter(value: string, opciones): string[] {
-
         const filterValue = value.toLowerCase();
-
-
         return opciones.filter(option => option.toLowerCase().includes(filterValue));
-
-
     }
 
 
     ngOnInit() {
 
-
         this.index = this.route.snapshot.params.index;
-
 
         this.body.query = {
             bool: {
@@ -287,15 +251,12 @@ export class StatsComponent implements OnInit, OnChanges {
             }
         };
 
-
-        this.terminos();
-
+        this.getTotalTermNameList();
         this.filteredOptions = this.myControl.valueChanges
             .pipe(
                 startWith(''),
                 map(value => this._filter(value, this.options))
             );
-
 
         this.loaded = {
             dBar1: false,
@@ -335,24 +296,19 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         this.getIndexIdList();
-
-        this.getNombres();
-
+        this.getDocumentTitles();
 
         //ACTUALIZAR LISTA DE DOCUMENTOS EN EL ÍNDICE
         this.lista = this.getTotalDocumentList();
         Object.assign(this.listaH);
-
 
         let maximo = $('#diagramas').height();
         let htitle = $('#listtitle').outerHeight();
         let hinput = $('#nfilter').outerHeight();
         let maxcont = 550 - htitle - hinput;
 
-
         $('#lista').css('min-height', '580px');
         $('#contlista').css('height', +maxcont + 'px');
-
 
     }
 
@@ -398,7 +354,6 @@ export class StatsComponent implements OnInit, OnChanges {
             return;
         }
     }
-
 
     /**
      * Retrieves the list of IDs for the selected index
