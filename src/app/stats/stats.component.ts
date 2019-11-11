@@ -213,21 +213,14 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    nameStyle() {
 
+    /**
+     * Verifies wheter the document is included inside active filters
+     * @param document Document to verify
+     */
+    isDocumentIncluded(document: Object) : boolean {
         let ids = (this.idSelName.length == 0) ? this.idSel : this.idSelName;
-        let that = this;
-
-        $('.nombre').each(function (index, value) {
-
-            let id = $(this).attr('id').replace('nombre', '');
-
-            if (ids.includes(id) && !$(this).hasClass('nombrepresente')) {
-                $(this).addClass('nombrepresente');
-            } else if (!ids.includes(id) && $(this).hasClass('nombrepresente')) {
-                $(this).removeClass('nombrepresente');
-            }
-        });
+        return ids.includes(document.id);
     }
 
 
@@ -323,10 +316,9 @@ export class StatsComponent implements OnInit, OnChanges {
             this.idSelName.splice(this.idSelName.indexOf(id), 1);
         }
 
-        this.actualizarBody();
+        this.updateBody();
         this.gen_bubbles();
         this.generateBubbleChart();
-        // this.nameStyle();
 
 
         /*
@@ -480,7 +472,7 @@ export class StatsComponent implements OnInit, OnChanges {
         this.tSeleccionados = [];
         this.aSeleccionados = [];
 
-        this.actualizarBody();
+        this.updateBody();
 
         this.gen_bubbles();
         this.generateBubbleChart();
@@ -565,8 +557,6 @@ export class StatsComponent implements OnInit, OnChanges {
                 error => {
                     console.log(error);
                 });
-
-        this.nameStyle();
 
         // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
         const margin = 60;
@@ -749,7 +739,7 @@ export class StatsComponent implements OnInit, OnChanges {
                         .style("fill", '#00ffff');
                     }
                 */
-                await that.actualizarBody();
+                await that.updateBody();
                 that.gen_bubbles();
 
 
@@ -800,7 +790,6 @@ export class StatsComponent implements OnInit, OnChanges {
             }, error => console.log(error));
         //}
 
-        this.nameStyle();
 
         // Realizamos una petición de multiterm vectors para obtener los temas.
         console.log('index = ' + this.index);
@@ -1013,7 +1002,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 */
 
 
-                that.actualizarBody();
+                that.updateBody();
                 that.generateBubbleChart();
 
 
@@ -1068,7 +1057,7 @@ export class StatsComponent implements OnInit, OnChanges {
             this.tSeleccionados.splice(indice, 1);
         }
 
-        this.actualizarBody();
+        this.updateBody();
         this.generateBubbleChart();
 
 
@@ -1087,7 +1076,7 @@ export class StatsComponent implements OnInit, OnChanges {
             this.aSeleccionados.splice(indice, 1);
         }
 
-        this.actualizarBody();
+        this.updateBody();
         this.gen_bubbles();
 
 
@@ -1096,7 +1085,7 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    async actualizarBody() {
+    async updateBody() {
 
 
         //let ids = (this.idSelName.length > 0) ? this.idSelName : this.idSel;
