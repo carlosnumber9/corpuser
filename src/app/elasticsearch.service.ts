@@ -88,16 +88,16 @@ export class ElasticsearchService {
    * @param index Index name to count documents from
    */
   public countDocs(index: any): any {
-    let count = 0;
-    let indices = [];
-
     this.client.cat.count({
       index: index,
       format: 'json'
     }).then(response => {
       console.log(response);
+      return response[0].count;
+    }, error => {
+      console.error('[ElasticsearchService] There was an error trying to count the number of documents in the index ' + index);
+      return -1;
     });
-    return count;
   }
 
 
