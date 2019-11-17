@@ -1,16 +1,16 @@
-import {Component, OnInit, ElementRef, OnChanges, NgModule, Directive} from '@angular/core';
+import { Component, OnInit, ElementRef, OnChanges, NgModule, Directive } from '@angular/core';
 import * as d3 from 'd3';
 // import { layout } from 'd3/index'
-import {Index} from '../index.model';
-import {Document} from '../document.model';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {HttpHeaders} from '@angular/common/http';
-import {ElasticsearchService} from '../elasticsearch.service';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {faSync, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Index } from '../index.model';
+import { Document } from '../document.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { ElasticsearchService } from '../elasticsearch.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { Router, ActivatedRoute } from '@angular/router';
 
 declare var $: any;
 
@@ -73,9 +73,6 @@ export class StatsComponent implements OnInit, OnChanges {
     // nombres : Lista de los títulos de los documentos que componen el índice
     nombres = [];
 
-    // idList : Lista de todos los ids de todos los documentos presentes en el corpus.
-    idList = [];
-
     // idSel : Selección actual de ids de documentos para mostrar datos.
     idSel = [];
 
@@ -94,7 +91,7 @@ export class StatsComponent implements OnInit, OnChanges {
             'Content-Type': 'application/json'
         })
     };
-    margin = {top: 20, right: 20, bottom: 30, left: 40};
+    margin = { top: 20, right: 20, bottom: 30, left: 40 };
     private chartContainer: ElementRef = this.svg;
 
 
@@ -172,13 +169,13 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 }
 
-                terminos = terminos
+                let sortedByOccurrenceCountTerms = terminos
                     .sort((elem1, elem2) => {
                         return (elem1['value'] > elem2['value']) ? -1 : 1;
                     });
                 //.slice(0, 6);
 
-                this.options = terminos.map(elem => elem['name']);
+                this.options = sortedByOccurrenceCountTerms.map(elem => elem['name']);
 
             }, (err) => {
                 console.log('Error con los term vectors.');
@@ -218,7 +215,7 @@ export class StatsComponent implements OnInit, OnChanges {
      * Verifies wheter the document is included inside active filters
      * @param document Document to verify
      */
-    isDocumentIncluded(document: Object) : boolean {
+    isDocumentIncluded(document: any): boolean {
         let ids = (this.idSelName.length == 0) ? this.idSel : this.idSelName;
         return ids.includes(document.id);
     }
@@ -287,8 +284,6 @@ export class StatsComponent implements OnInit, OnChanges {
             }
         };
 
-
-        this.getIndexIdList();
         this.getDocumentTitles();
 
         //ACTUALIZAR LISTA DE DOCUMENTOS EN EL ÍNDICE
@@ -345,14 +340,6 @@ export class StatsComponent implements OnInit, OnChanges {
         if (!this.listaH) {
             return;
         }
-    }
-
-    /**
-     * Retrieves the list of IDs for the selected index
-     */
-    private async getIndexIdList() {
-        this.id = this.elastic.countDocs(this.index);
-        this.idList = Array.from(new Array(this.id - 1), (val, index) => index + 1);
     }
 
 
@@ -544,16 +531,16 @@ export class StatsComponent implements OnInit, OnChanges {
         await this.elastic.search(this.index, this.body)
             .then(response => {
 
-                    this.listaY = response.aggregations.dates.buckets.map((elem) => ({
-                        ano: new Date(elem.key_as_string).getFullYear(),
-                        reps: elem.doc_count
-                    }));
+                this.listaY = response.aggregations.dates.buckets.map((elem) => ({
+                    ano: new Date(elem.key_as_string).getFullYear(),
+                    reps: elem.doc_count
+                }));
 
-                    this.idSel = response.hits.hits.map((elem) => (elem._id));
+                this.idSel = response.hits.hits.map((elem) => (elem._id));
 
-                    rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
+                rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
 
-                },
+            },
                 error => {
                     console.log(error);
                 });
@@ -772,9 +759,7 @@ export class StatsComponent implements OnInit, OnChanges {
         this.loaded['dBub1'] = false;
 
         let ids = [];
-
-        //if(this.aSeleccionados.length == 0) {ids = this.idList}
-        //else {
+        
         await this.elastic.search(this.index, this.body)
             .then(response => {
 
@@ -788,8 +773,6 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
             }, error => console.log(error));
-        //}
-
 
         // Realizamos una petición de multiterm vectors para obtener los temas.
         console.log('index = ' + this.index);
