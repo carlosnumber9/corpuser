@@ -1,16 +1,14 @@
-import { Component, OnInit, ElementRef, OnChanges, NgModule, Directive } from '@angular/core';
+import { Component, OnInit, ElementRef, OnChanges } from '@angular/core';
 import * as d3 from 'd3';
-// import { layout } from 'd3/index'
 import { Index } from '../index.model';
 import { Document } from '../document.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 declare var $: any;
 
@@ -45,9 +43,7 @@ export class StatsComponent implements OnInit, OnChanges {
     host;
     svg;
 
-
     index: string;
-
 
     // lista : Lista de documentos añadidos para el índice.
     lista: Document[] = [];
@@ -84,7 +80,6 @@ export class StatsComponent implements OnInit, OnChanges {
         'aggs': {}
     };
 
-
     id: number;
     opciones = {
         headers: new HttpHeaders({
@@ -93,16 +88,11 @@ export class StatsComponent implements OnInit, OnChanges {
     };
     margin = { top: 20, right: 20, bottom: 30, left: 40 };
     private chartContainer: ElementRef = this.svg;
-
-
     color = 'primary';
     value = 50;
     mode = 'indeterminate';
-
-
     single: any[];
     multi: any[];
-
     view: any[] = [700, 400];
 
     // options
