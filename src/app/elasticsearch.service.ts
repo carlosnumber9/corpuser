@@ -1,18 +1,8 @@
-import { Injectable, OnChanges } from '@angular/core';
-
+import { Injectable } from '@angular/core';
 import { Client } from 'elasticsearch-browser';
-// import * as elasticsearch from 'elasticsearch-browser';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Document } from './document.model';
-import { Index } from './index.model';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
-import { TermVectorsRequest, MultiTermVectorsRequest } from 'elasticsearch-browser';
-import { debug } from 'util';
+import { BehaviorSubject } from 'rxjs';
 
-const EPElastic = 'http://localhost:9200';
-const EPFSCrawler = 'http://localhost:8080/fscrawler';
-const EPUpload = 'http://localhost:4200/api/uploads';
+const ELASTIC_ENDPOINT = 'http://localhost:9200';
 
 @Injectable({
   providedIn: 'root'
@@ -20,62 +10,61 @@ const EPUpload = 'http://localhost:4200/api/uploads';
 export class ElasticsearchService {
 
 
-  // Variables internas del servicio
   private client: Client;
-  private datos;
   queryalldocs = {
     'query': {
       'match_all': {}
     }
   };
 
-
-
-
-private selectedIndex = '';
-
+  private selectedIndex = '';
   public indexSub;
 
 
-  // CONEXIÓN CON EL SERVIDOR
   constructor() {
 
     this.selectedIndex = '';
-
-    if (!this.client){
+    if (!this.client) {
       this.connect();
     }
-
     this.indexSub = new BehaviorSubject(this.selectedIndex);
 
-   }
+  }
 
 
-  private connect(){
+  /**
+   * Creates a connection with the Elasticsearch server
+   */
+  private connect() {
     this.client = new Client({
-      host: 'http://localhost:9200'
+      host: ELASTIC_ENDPOINT,
+      log: 'trace'
     });
   }
 
-
+  // TODO: What does it do??!?
+  /**
+   * ?!?
+   */
   public getIndex(): string {
-
-    // return of(this.selectedIndex);
-
     return this.indexSub.getValue();
-
   }
 
+
+  /**
+   * Sets the index param as the selected one
+   * @param index Index to be selected
+   */
   public setIndex(index: string) {
     this.selectedIndex = index;
-    console.debug('[ElasticsearchService]   selectedIndex = ' + this.selectedIndex);
     this.indexSub.next(this.selectedIndex);
   }
 
 
-
-  // RECOGIDA DE INFORMACIÓN RELATIVA A ÍNDICES
-  indexList(): any {
+  /**
+   * Retrieves a list of all indices with their document counts
+   */
+  public getIndexListWithDocCount(): Object[] {
 
     const indices = [];
 
@@ -98,13 +87,17 @@ private selectedIndex = '';
    * Counts the total amount of documents in the index
    * @param index Index name to count documents from
    */
-  public countDocs(index): number {
-    let count = 0;
+  public countDocs(index: any): any {
     this.client.cat.count({
       index: index,
       format: 'json'
-    }).then(response => ( count = response[0].count) );
-    return count;
+    }).then(response => {
+      console.log(response);
+      return response[0].count;
+    }, error => {
+      console.error('[ElasticsearchService] There was an error trying to count the number of documents in the index ' + index);
+      return -1;
+    });
   }
 
 
@@ -112,7 +105,7 @@ private selectedIndex = '';
    * Creates an index
    * @param indexName Index name
    */
-  public createIndex(indexName: name): any {
+  public createIndex(indexName: string): any {
 
     const body = {
       index: indexName,
@@ -127,7 +120,7 @@ private selectedIndex = '';
                     'term_vector': 'with_positions_offsets_payloads',
                     'store': true,
                     'analyzer': 'fulltext_analyzer'
-                    }
+                  }
                 }
               }
             },
@@ -145,38 +138,35 @@ private selectedIndex = '';
             'analyzer': {
               'fulltext_analyzer': {
                 'type': 'standard',
-                'stopwords': [ 'a', 'ante', 'bajo', 'cabe', 'con', 'contra', 'de', 'desde',
-                'en', 'entre', 'hacia', 'hasta', 'para', 'por', 'según', 'segun', 'sin', 'so',
-                'sobre', 'tras', 'durante', 'mediante', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-                'x', 'y', 'z', 'el', 'la', 'los', 'las', 'aquel', 'aquella', 'aquellas', 'aquellos',
-                'esa', 'esas', 'ese', 'esos', 'esta', 'estas', 'este', 'estos', 'mi', 'mis', 'tu',
-                'tus', 'su', 'sus', 'nuestra', 'nuestro', 'nuestras', 'nuestros', 'vuestra',
-                'vuestro', 'vuestras', 'vuestros', 'suya', 'suyo', 'suyas', 'suyos', 'cuanta',
-                'cuánta', 'cuántas', 'cuanto', 'cuánto', 'cuántos', 'que', 'qué', 'alguna',
-                'alguno', 'algunas', 'algunos', 'algun', 'algún', 'bastante', 'bastantes',
-                'cada', 'ninguna', 'ninguno', 'ningunas', 'ningunos', 'ningun', 'ningún',
-                'otra', 'otro', 'otras', 'otros', 'sendas', 'sendos', 'tanta', 'tanto',
-                'tantas', 'tantos', 'toda', 'todo', 'todas', 'todos', 'una', 'uno', 'unas',
-                'unos', 'un', 'varias', 'varios', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                '0', 'es', 'al', 'sí', 'si', 'no', 'del', 'ti', 'lo', 'se', 'dos', 'va', 'ra',
-                'na', 've', 'da', 'me', 'ven', 'vi', 'av', 'll', 'iv', 'rv', 'ad', 'pa', 'le',
-                'aci', 'au', 'ct', 'lv', 'ha', 'pro', 'rc', 'ido', 'den', 'pt', 'nos', 'tal',
-                'eso', 'era', 'ser', 'más', 'rica', 'or', 'co', 'on', 'ca', 'in', 'to', 'ac',
-                'rd', 'is', 'par', 'it', 'for', 'are', 'be', 'and', 'puede', 'pero', 'cuando',
-                'son', 'como']
-                }
+                'stopwords': ['a', 'ante', 'bajo', 'cabe', 'con', 'contra', 'de', 'desde',
+                  'en', 'entre', 'hacia', 'hasta', 'para', 'por', 'según', 'segun', 'sin', 'so',
+                  'sobre', 'tras', 'durante', 'mediante', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                  'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+                  'x', 'y', 'z', 'el', 'la', 'los', 'las', 'aquel', 'aquella', 'aquellas', 'aquellos',
+                  'esa', 'esas', 'ese', 'esos', 'esta', 'estas', 'este', 'estos', 'mi', 'mis', 'tu',
+                  'tus', 'su', 'sus', 'nuestra', 'nuestro', 'nuestras', 'nuestros', 'vuestra',
+                  'vuestro', 'vuestras', 'vuestros', 'suya', 'suyo', 'suyas', 'suyos', 'cuanta',
+                  'cuánta', 'cuántas', 'cuanto', 'cuánto', 'cuántos', 'que', 'qué', 'alguna',
+                  'alguno', 'algunas', 'algunos', 'algun', 'algún', 'bastante', 'bastantes',
+                  'cada', 'ninguna', 'ninguno', 'ningunas', 'ningunos', 'ningun', 'ningún',
+                  'otra', 'otro', 'otras', 'otros', 'sendas', 'sendos', 'tanta', 'tanto',
+                  'tantas', 'tantos', 'toda', 'todo', 'todas', 'todos', 'una', 'uno', 'unas',
+                  'unos', 'un', 'varias', 'varios', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                  '0', 'es', 'al', 'sí', 'si', 'no', 'del', 'ti', 'lo', 'se', 'dos', 'va', 'ra',
+                  'na', 've', 'da', 'me', 'ven', 'vi', 'av', 'll', 'iv', 'rv', 'ad', 'pa', 'le',
+                  'aci', 'au', 'ct', 'lv', 'ha', 'pro', 'rc', 'ido', 'den', 'pt', 'nos', 'tal',
+                  'eso', 'era', 'ser', 'más', 'rica', 'or', 'co', 'on', 'ca', 'in', 'to', 'ac',
+                  'rd', 'is', 'par', 'it', 'for', 'are', 'be', 'and', 'puede', 'pero', 'cuando',
+                  'son', 'como']
+              }
             }
           }
         }
       }
     };
 
-
     return this.client.indices.create(body);
   }
-
-
 
 
   /**
@@ -184,11 +174,11 @@ private selectedIndex = '';
    * @param indexName Index name to delete
    */
   public deleteIndex(indexName: string) {
-
-    return this.client.indices.delete({index: indexName})
-      .then((response) => (console.debug('[ElasticsearchService]    Índice' + indexName + ' borrado con éxito.')));
-
+    return this.client.indices.delete({ index: indexName })
+      .then()
+      .console.error((e) => console.error(e));
   }
+
 
   /**
    * Lists all documents from an index
@@ -231,7 +221,7 @@ private selectedIndex = '';
   }
 
 
-
+  // TODO: What is this?!?!?
   // SUBIDA DE UN DOCUMENTO A UN ÍNDICE
   addToIndex(value): any {
     return this.client.create(value);
@@ -246,7 +236,7 @@ private selectedIndex = '';
    * @param data Data to insert
    * @param id ID for the new document to insert
    */
-  public uploadDocument(index, type, name, data, id){
+  public uploadDocument(index, type, name, data, id) {
 
     const params = {
       'id': id,
@@ -267,14 +257,14 @@ private selectedIndex = '';
     this.client.ingest.putPipeline(params);
 
     return this.addToIndex({
-      index: index,
-      type: 'doc',
-      id: id,
-      body: {
+      'index': index,
+      'type': 'doc',
+      'id': id,
+      'body': {
         'title': name,
-        'data' : data
+        'data': data
       },
-      pipeline: 'attachment'
+      'pipeline': 'attachment'
     });
 
   }
@@ -287,14 +277,13 @@ private selectedIndex = '';
    * @param index Index to search inside
    * @param body Parameters for the search
    */
-  public search(index, body) {
+  public search(index: string, body: any) {
     return this.client.search({
       index: index,
       body: body,
       size: 10000
     });
   }
-
 
 
   /**
@@ -308,7 +297,8 @@ private selectedIndex = '';
   }
 
 
-  addDoc(info): any {
+  // TODO: What is this?!?!?!
+  addDoc(info: any): any {
     return this.client.create(info);
   }
 
@@ -318,7 +308,7 @@ private selectedIndex = '';
    * Deletes all documents inside an index
    * @param index Index to empty
    */
-  clearDB(index: string) {
+  deleteAllFromIndex(index: string) {
     return this.client.deleteByQuery({
       index: index,
       body: {
@@ -328,10 +318,6 @@ private selectedIndex = '';
       }
     });
   }
-
-
-
-
 
 
 

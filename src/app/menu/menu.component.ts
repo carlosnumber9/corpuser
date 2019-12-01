@@ -1,7 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Index } from '../index.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { fadeAnimation } from '../animations';
 
@@ -16,7 +14,6 @@ declare var $: any;
 export class MenuComponent implements OnInit {
 
 
-  indices: Index[] = [];
   opciones = {
     headers: new HttpHeaders({
       'Content-Type' : 'application/json'
@@ -36,21 +33,11 @@ export class MenuComponent implements OnInit {
     $('#datosdiv').css('border', 'none');
     $('#statsdiv').css('border', 'none');
 
-
-
     setTimeout(function(){
       $('.menucontent').animate({opacity: 1}, 300);
     }, 500);
 
-
-
  }
-
-
-
-
-
-
 
 
 
@@ -72,15 +59,5 @@ fileout(event) {
   dropzone.animate({border: '3px solid gray'}, 300);
 
 }
-
-
-
-
-
-
-
-
-
-
 
 }
