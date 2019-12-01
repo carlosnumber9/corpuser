@@ -30,7 +30,6 @@ export class StatsComponent implements OnInit, OnChanges {
     faTimes = faTimesCircle;
 
     myControl = new FormControl();
-    nFilter = new FormControl();
     options: string[] = [];
     filteredOptions: Observable<string[]>;
     filteredValue: string[];
@@ -200,17 +199,6 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-
-    /**
-     * Verifies wheter the document is included inside active filters
-     * @param document Document to verify
-     */
-    isDocumentIncluded(document: any): boolean {
-        let ids = (this.idSelName.length == 0) ? this.idSel : this.idSelName;
-        return ids.includes(document.id);
-    }
-
-
     private _filter(value: string, opciones): string[] {
         const filterValue = value.toLowerCase();
         return opciones.filter(option => option.toLowerCase().includes(filterValue));
@@ -291,14 +279,14 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    filtroNombre(id) {
+    filtroNombre(event) {
 
         // let indice = this.idSel.indexOf(id);
 
-        if (!this.idSelName.includes(id)) {
-            this.idSelName.push(id);
+        if (!this.idSelName.includes(event)) {
+            this.idSelName.push(event);
         } else {
-            this.idSelName.splice(this.idSelName.indexOf(id), 1);
+            this.idSelName.splice(this.idSelName.indexOf(event), 1);
         }
 
         this.updateBody();
