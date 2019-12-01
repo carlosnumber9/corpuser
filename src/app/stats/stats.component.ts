@@ -25,6 +25,9 @@ export class StatsComponent implements OnInit, OnChanges {
         dBub1;
     };
 
+    private GRAPH_BAR_DEFAULT_COLOR = '#00af05'; 
+    private GRAPH_BAR_SELECTED_COLOR = '#00ffff'; 
+
 
     faSync = faSync;
     faTimes = faTimesCircle;
@@ -158,13 +161,12 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 }
 
-                let sortedByOccurrenceCountTerms = terminos
+                terminos
                     .sort((elem1, elem2) => {
                         return (elem1['value'] > elem2['value']) ? -1 : 1;
                     });
-                //.slice(0, 6);
 
-                this.options = sortedByOccurrenceCountTerms.map(elem => elem['name']);
+                this.options = terminos.map(elem => elem['name']);
 
             }, (err) => {
                 console.log('Error con los term vectors.');
@@ -268,7 +270,6 @@ export class StatsComponent implements OnInit, OnChanges {
         this.lista = this.getTotalDocumentList();
         Object.assign(this.listaH);
 
-        let maximo = $('#diagramas').height();
         let htitle = $('#listtitle').outerHeight();
         let hinput = $('#nfilter').outerHeight();
         let maxcont = 550 - htitle - hinput;
@@ -423,7 +424,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 });
             }
 
-            this.listaH = this.listaH.sort((elem1, elem2) => {
+            this.listaH.sort((elem1, elem2) => {
                 return (elem1['value'] > elem2['value']) ? -1 : 1;
             });
 
@@ -581,7 +582,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         // AÑADIMOS LAS BARRAS PARA CADA ELEMENTO DE LA LISTA (DATOS)
-        let barras = chart.selectAll()
+        chart.selectAll()
             .data(this.listaY)
             .enter()
             .append('rect')
@@ -591,9 +592,9 @@ export class StatsComponent implements OnInit, OnChanges {
             .attr('width', xScale.bandwidth())
             .attr('fill', (d) => {
                 if (this.aSeleccionados.indexOf(d.ano)) {
-                    return '#00ffff';
+                    return this.GRAPH_BAR_SELECTED_COLOR;
                 } else {
-                    return '#00af05';
+                    return this.GRAPH_BAR_DEFAULT_COLOR;
                 }
             })
             .attr('stroke', 'blue')
@@ -712,7 +713,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         // BORDE DEL DIAGRAMA
-        let borde = svg.append('rect')
+        svg.append('rect')
             .attr('x', margin)
             .attr('y', margin)
             .attr('height', height)
@@ -737,7 +738,7 @@ export class StatsComponent implements OnInit, OnChanges {
         this.loaded['dBub1'] = false;
 
         let ids = [];
-        
+
         await this.elastic.search(this.index, this.body)
             .then(response => {
 
@@ -776,11 +777,12 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 }
 
-                this.listaH = this.listaH
+                this.listaH
                     .sort((elem1, elem2) => {
                         return (elem1['value'] > elem2['value']) ? -1 : 1;
-                    })
-                    .slice(0, 15);
+                    });
+
+                this.listaH = this.listaH.slice(0, 15);
 
             }, (err) => {
                 console.log('Error con los term vectors.');
@@ -794,17 +796,13 @@ export class StatsComponent implements OnInit, OnChanges {
         let margen = 20;
         const width = 600 - 2 * margen;
         const height = 350 - 2 * margen;
-        let color = d3.scaleOrdinal(d3.schemeCategory10);
-        let factor = d3.min(this.listaH.map((d) => d.value));
-        let maximo = d3.max(this.listaH.map((d) => d.value));
+        d3.scaleOrdinal(d3.schemeCategory10);
         let media = d3.mean(this.listaH.map((d) => d.value));
-
 
         // SELECCIONAMOS EL OBJETO SVG Y LE APLICAMOS LAS DIMENSIONES
         const svg = d3.select('#dbub')
             .attr('width', 600)
             .attr('height', 350);
-
 
         // ESTABLECEMOS LAS FUERZAS QUE VAN A PRODUCIRSE ENTRE LAS BURBUJAS
         let simulation = d3.forceSimulation()
@@ -822,7 +820,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         // CREAMOS LAS BURBUJAS DENTRO DE LOS NODOS
-        let circles = node
+        node
             .append('circle')
             .attr('cx', width / 2)
             .attr('cy', height / 2)
@@ -843,7 +841,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         // AÑADIMOS A LAS BURBUJAS LAS PALABRAS QUE LE CORRESPONDEN
-        let text = node
+        node
             .append('text')
             .attr('font-size', 15)
             .attr('x', width / 2)
@@ -892,9 +890,7 @@ export class StatsComponent implements OnInit, OnChanges {
             d.fx = null;
             d.fy = null;
             simulation.alphaTarget(0.1);
-
         }
-
 
         let anch = $('#dbub').width();
         let alt = $('#dbub').height();
@@ -907,7 +903,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
         // BORDE DEL DIAGRAMA
-        let borde = svg.append('rect')
+        svg.append('rect')
             .attr('x', margen)
             .attr('y', margen)
             .attr('height', height)
@@ -929,8 +925,6 @@ export class StatsComponent implements OnInit, OnChanges {
         d3.selectAll('.bbub')
             .on('click', function (actual, i) {
                 let tema = d3.select(this).attr('id');
-                console.log('Se quiere insertar el tema ' + tema + ' en tSeleccionados.');
-
 
                 if (!that.tSeleccionados.includes(tema)) {
                     that.tSeleccionados.push(tema);
@@ -1008,41 +1002,39 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    public anadirTema(tema: string): number {
-
-        let indice = this.tSeleccionados.indexOf(tema);
-
-        if (indice < 0) {
-            this.tSeleccionados.push(tema);
-        } else {
-            this.tSeleccionados.splice(indice, 1);
-        }
-
+    /**
+     * Adds/Removes clicked topic to/from selected topics array and updates graphs
+     * @param topic New topic to be added/removed from selected topics list
+     */
+    public addTopic(topic: string) {
+        this.toggleFilter(this.tSeleccionados, topic);
         this.updateBody();
         this.generateBarGraph();
-
-
-        return indice;
-
     }
 
 
-    public anadirAno(ano: string): number {
-
-        let indice = this.aSeleccionados.indexOf(ano);
-
-        if (indice < 0) {
-            this.aSeleccionados.push(ano);
-        } else {
-            this.aSeleccionados.splice(indice, 1);
+    /**
+     * Adds filter to array if its not in, removes from array if it does
+     */
+    private toggleFilter(filterArray: string[], filter: string) {
+        let index = filterArray.indexOf(filter);
+        if(index) {
+            filterArray.splice(index, 1);
         }
+        else {
+            filterArray.push(filter);
+        }
+    }
 
+
+    /**
+     * Adds a year filter to body global object
+     * @param year Year to apply new filter for
+     */
+    public addYear(year: string) {
+        this.toggleFilter(this.aSeleccionados, year);
         this.updateBody();
         this.generateBubbleChart();
-
-
-        return indice;
-
     }
 
 
