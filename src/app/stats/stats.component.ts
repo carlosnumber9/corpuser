@@ -290,8 +290,8 @@ export class StatsComponent implements OnInit, OnChanges {
         }
 
         this.updateBody();
-        this.gen_bubbles();
         this.generateBubbleChart();
+        this.generateBarGraph();
 
 
         /*
@@ -338,8 +338,8 @@ export class StatsComponent implements OnInit, OnChanges {
                     };
                     docRes.push(docToInsert);
                 }
+                this.generateBarGraph();
                 this.generateBubbleChart();
-                this.gen_bubbles();
             }, error => {
                 console.error(error);
                 console.log('There was an error trying to retrieve the total document list. (getTotalDocumentList)');
@@ -439,8 +439,8 @@ export class StatsComponent implements OnInit, OnChanges {
 
         this.updateBody();
 
-        this.gen_bubbles();
         this.generateBubbleChart();
+        this.generateBarGraph();
 
     }
 
@@ -494,7 +494,7 @@ export class StatsComponent implements OnInit, OnChanges {
     */
 
 
-    public async generateBubbleChart() {
+    public async generateBarGraph() {
 
         const that = this;
         d3.select('#dbar').html('');
@@ -705,7 +705,7 @@ export class StatsComponent implements OnInit, OnChanges {
                     }
                 */
                 await that.updateBody();
-                that.gen_bubbles();
+                that.generateBubbleChart();
 
 
             });
@@ -728,7 +728,7 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    public async gen_bubbles() {
+    public async generateBubbleChart() {
 
 
         d3.select('#dbub').html('');
@@ -964,7 +964,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
 
                 that.updateBody();
-                that.generateBubbleChart();
+                that.generateBarGraph();
 
 
             });
@@ -1019,7 +1019,7 @@ export class StatsComponent implements OnInit, OnChanges {
         }
 
         this.updateBody();
-        this.generateBubbleChart();
+        this.generateBarGraph();
 
 
         return indice;
@@ -1038,7 +1038,7 @@ export class StatsComponent implements OnInit, OnChanges {
         }
 
         this.updateBody();
-        this.gen_bubbles();
+        this.generateBubbleChart();
 
 
         return indice;
