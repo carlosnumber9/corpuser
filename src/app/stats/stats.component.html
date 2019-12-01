@@ -54,25 +54,10 @@
                 <button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
             </div>
         </div>
+
+        <!-- DOCUMENT TITLE LIST -->
         <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded" style="min-height: 200px">
-            <div id="lista" class="col-xl-9 col-lg-9 col-md-12 col-xs-12 diagrama offset-xl-3 offset-lg-3 pt-2 pb-2" style="min-height: 200px">
-                <h5 id="listtitle" class="card-title mb-4"> Lista de documentos </h5>
-                <form id="nfilter" class="example-form center-block">
-                    <mat-form-field class="example-full-width">
-                        <input type="text" [(ngModel)]="searchText" placeholder="Encuentra documentos" aria-label="Number" matInput [formControl]="nFilter">
-                    </mat-form-field>
-                </form>
-                <div id="contlista" class="rounded">
-                    <div 
-                        (click)="filtroNombre(nombre.id)" 
-                        id="nombre{{ nombre.id }}" 
-                        class="nombre text-truncate" 
-                        *ngFor="let nombre of nombres | filter : searchText"
-                        [ngClass]="{nombrepresente: isDocumentIncluded(nombre)}"> 
-                            {{ nombre.name }} 
-                    </div>
-                </div>
-            </div>
+            <title-list [total-title-list]="nombres" [filtered-id-list]="idSel" [filtered-title-id-list]="idSelName" (titleWasSelected)="filtroNombre($event)"></title-list>
         </div>
     </div>
 </div>
