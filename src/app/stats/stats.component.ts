@@ -18,7 +18,7 @@ declare var $: any;
     templateUrl: './stats.component.html',
     styleUrls: ['./stats.component.css']
 })
-export class StatsComponent implements OnInit, OnChanges {
+export class StatsComponent implements OnInit {
 
     loaded: {
         dBar1;
