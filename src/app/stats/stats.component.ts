@@ -144,7 +144,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 response => {
                     ids = response.hits.hits.map((elem) => (elem._id));
                 },
-                error => console.log(error)
+                error => console.error(error)
             );
 
 
@@ -169,8 +169,8 @@ export class StatsComponent implements OnInit, OnChanges {
                 this.options = terminos.map(elem => elem['name']);
 
             }, (err) => {
-                console.log('Error con los term vectors.');
-                console.log(err);
+                console.error('[StatsComponent] Error retrieving total term list');
+                console.error(err);
             }
         );
     }
@@ -195,7 +195,7 @@ export class StatsComponent implements OnInit, OnChanges {
                     name: elem['_source'].title
                 }));
 
-            }, error => console.log(error)
+            }, error => console.error(error)
         );
 
     }
@@ -294,33 +294,13 @@ export class StatsComponent implements OnInit, OnChanges {
         this.generateBubbleChart();
         this.generateBarGraph();
 
-
         /*
             if(!this.idSelName.includes(id)) this.idSelName.push(id);
             else delete this.idSelName[this.idSelName.indexOf(id)];
-
-            console.log(this.idSelName);
-
-
             this.gen_bubbles();
             this.gen_dTemas();
         */
     }
-
-
-    onSelect(event) {
-        console.log(event);
-        console.log('Aquí se pueden hacer cositass');
-        console.log(event.name);
-    }
-
-
-    ngOnChanges(): void {
-        if (!this.listaH) {
-            return;
-        }
-    }
-
 
     /**
      * Retrieves the total document list for the selected index
@@ -343,7 +323,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 this.generateBubbleChart();
             }, error => {
                 console.error(error);
-                console.log('There was an error trying to retrieve the total document list. (getTotalDocumentList)');
+                console.error('[StatsComponent] There was an error trying to retrieve the total document list. (getTotalDocumentList)');
             });
         return docRes;
     }
@@ -446,55 +426,6 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
-    /*
-      get_YV(){
-
-        let result = [];
-
-        for(let doc of this.lista){
-          let fecha = new Date(doc.fecha);
-          let ano = (doc.fecha) ? fecha.getFullYear() : "(Desconocido)";
-
-          if(ano == "(Desconocido)") {
-            this.corpusLimpio = false;
-            this.noLimpios = this.noLimpios + 1;
-          }
-          else{
-            let encontrado = false;
-          for(let elem of result){
-            if(ano == "(Desconocido)") break;
-            if(elem.ano == ano) {
-              elem.reps = elem.reps + 1;
-              encontrado = true;
-            }
-          }
-
-          if(!encontrado) result.push({
-            ano : ano,
-            reps : 1
-          });
-          }
-
-
-        }
-
-        //for(let elem of result) console.log("Año " + elem.ano + " con " + elem.reps + " documentos.");
-
-        result = result.sort((elem1, elem2) => {
-          if(elem1["ano"] == "(Desconocido)") return -1;
-          else if (elem2["ano"] == "(Desconocido)") return 1;
-          else return (elem1["ano"] < elem2["ano"]) ? -1 : 1;
-        });
-
-
-
-
-        this.listaY = result;
-
-      }
-    */
-
-
     public async generateBarGraph() {
 
         const that = this;
@@ -521,7 +452,7 @@ export class StatsComponent implements OnInit, OnChanges {
 
             },
                 error => {
-                    console.log(error);
+                    console.error(error);
                 });
 
         // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
@@ -665,16 +596,11 @@ export class StatsComponent implements OnInit, OnChanges {
                     .attr('opacity', '1');
             });
 
-
         // AÑADIMOS LAS FUNCIONES DE INTERACTIVIDAD AL ELEGIR (PULSAR) UN AÑO DEL DIAGRAMA.
         d3.selectAll('.bbar')
             .on('click', async function (actual, i) {
 
                 let ano = d3.select(this).attr('id');
-                //console.log("Se quiere insertar el año " + ano + " en tSeleccionados.");
-
-                //if(that.aSeleccionados.length == 0) console.log("La lista de años está vacía.");
-
 
                 if (!that.aSeleccionados.includes(ano)) {
                     that.aSeleccionados.push(ano);
@@ -751,21 +677,14 @@ export class StatsComponent implements OnInit, OnChanges {
                 //let intersec = ids.filter((elem) => this.idSelName.includes(elem));
 
 
-            }, error => console.log(error));
+            }, error => console.error(error));
 
         // Realizamos una petición de multiterm vectors para obtener los temas.
-        console.log('index = ' + this.index);
-
         await this.elastic.getTermsList('testdocs', 'attachment.content', ids).then(
             response => {
 
                 let terms = {};
                 for (let doc of response.docs) {
-
-                    //console.log("Los terms para el documento " + doc._id + " son:");
-                    //console.log(doc.term_vectors["attachment.content"].terms);
-
-
                     Object.assign(terms, doc.term_vectors['attachment.content'].terms);
                 }
 
@@ -785,8 +704,8 @@ export class StatsComponent implements OnInit, OnChanges {
                 this.listaH = this.listaH.slice(0, 15);
 
             }, (err) => {
-                console.log('Error con los term vectors.');
-                console.log(err);
+                console.error('[StatsComponent] Error trying to get term list for bubble chart.');
+                console.error(err);
             }
         );
 
@@ -956,11 +875,8 @@ export class StatsComponent implements OnInit, OnChanges {
                     }
                 */
 
-
                 that.updateBody();
                 that.generateBarGraph();
-
-
             });
 
 
@@ -991,14 +907,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 d3.select(this).style('cursor', 'default');
             });
 
-
         this.loaded['dBub1'] = true;
-
-
-        console.log('Ahora idSel vale:');
-        console.log(this.idSel);
-
-
     }
 
 
@@ -1086,17 +995,8 @@ export class StatsComponent implements OnInit, OnChanges {
                     }
                 }
             });
-
-            //console.log("Se va a poner un filtro entre los años " + d3.min(this.aSeleccionados) + " y " + d3.max(this.aSeleccionados) + ".");
         }
-
-
-        console.log("Ahora idSel vale:");
-        console.log(this.body);
-        console.log(JSON.stringify(this.body, null, 4));
-
     }
-
 
 }
 
