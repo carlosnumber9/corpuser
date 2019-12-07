@@ -28,6 +28,10 @@ export class StatsComponent implements OnInit {
     private GRAPH_BAR_DEFAULT_COLOR = '#00af05'; 
     private GRAPH_BAR_SELECTED_COLOR = '#00ffff'; 
 
+    private FILTER_TYPES = {
+        TOPIC: 'TOPIC',
+        YEAR: 'YEAR'
+    };
 
     faSync = faSync;
     faTimes = faTimesCircle;
@@ -126,6 +130,21 @@ export class StatsComponent implements OnInit {
         };
         this.corpusLimpio = true;
         this.noLimpios = 0;
+    }
+
+
+    private onFilterSelection(filterType: string) {
+        switch(filterType) {
+            case this.FILTER_TYPES.TOPIC:
+                this.updateBody();
+                this.generateBarGraph();
+                break;
+            case this.FILTER_TYPES.YEAR:
+                 break;
+            default:
+                console.error('[StatsComponent] Incorrect filter type selection.');
+                break;
+        }
     }
 
 
@@ -291,7 +310,7 @@ export class StatsComponent implements OnInit {
         }
 
         this.updateBody();
-        this.generateBubbleChart();
+        this.generateTopicsGraphData();
         this.generateBarGraph();
 
         /*
@@ -320,7 +339,7 @@ export class StatsComponent implements OnInit {
                     docRes.push(docToInsert);
                 }
                 this.generateBarGraph();
-                this.generateBubbleChart();
+                this.generateTopicsGraphData();
             }, error => {
                 console.error(error);
                 console.error('[StatsComponent] There was an error trying to retrieve the total document list. (getTotalDocumentList)');
@@ -420,7 +439,7 @@ export class StatsComponent implements OnInit {
 
         this.updateBody();
 
-        this.generateBubbleChart();
+        this.generateTopicsGraphData();
         this.generateBarGraph();
 
     }
@@ -632,7 +651,7 @@ export class StatsComponent implements OnInit {
                     }
                 */
                 await that.updateBody();
-                that.generateBubbleChart();
+                that.generateTopicsGraphData();
 
 
             });
@@ -655,28 +674,19 @@ export class StatsComponent implements OnInit {
     }
 
 
-    public async generateBubbleChart() {
-
+    /**
+     * Updates topics list with current body object
+     */
+    public async generateTopicsGraphData() {
 
         d3.select('#dbub').html('');
         this.listaH = [];
-
-        this.loaded['dBub1'] = false;
-
         let ids = [];
 
         await this.elastic.search(this.index, this.body)
             .then(response => {
-
                 this.idSel = response.hits.hits.map((elem) => elem._id);
                 ids = (this.idSelName.length > 0) ? this.idSelName : this.idSel;
-
-
-                //if(this.idSelName.length == 0) this.idSel = ids;
-                //else this.idSel = this.idSelName;
-                //let intersec = ids.filter((elem) => this.idSelName.includes(elem));
-
-
             }, error => console.error(error));
 
         // Realizamos una petición de multiterm vectors para obtener los temas.
@@ -687,7 +697,6 @@ export class StatsComponent implements OnInit {
                 for (let doc of response.docs) {
                     Object.assign(terms, doc.term_vectors['attachment.content'].terms);
                 }
-
 
                 for (let key in terms) {
                     this.listaH.push({
@@ -708,206 +717,7 @@ export class StatsComponent implements OnInit {
                 console.error(err);
             }
         );
-
-
-        let that = this;
-
-        let margen = 20;
-        const width = 600 - 2 * margen;
-        const height = 350 - 2 * margen;
-        d3.scaleOrdinal(d3.schemeCategory10);
-        let media = d3.mean(this.listaH.map((d) => d.value));
-
-        // SELECCIONAMOS EL OBJETO SVG Y LE APLICAMOS LAS DIMENSIONES
-        const svg = d3.select('#dbub')
-            .attr('width', 600)
-            .attr('height', 350);
-
-        // ESTABLECEMOS LAS FUERZAS QUE VAN A PRODUCIRSE ENTRE LAS BURBUJAS
-        let simulation = d3.forceSimulation()
-            .force('collide', d3.forceCollide(35).iterations(1000))
-            .force('charge', d3.forceManyBody().strength(-300).distanceMin(300).distanceMax(400))
-            .force('atract', d3.forceManyBody().strength(450).distanceMin(400).distanceMax(500));
-
-
-        // AÑADIMOS DENTRO DEL SVG LOS NODOS DE INFORMACIÓN
-        let node = svg.selectAll('g')
-            .data(this.listaH)
-            .enter()
-            .append('g')
-            .attr('class', 'node');
-
-
-        // CREAMOS LAS BURBUJAS DENTRO DE LOS NODOS
-        node
-            .append('circle')
-            .attr('cx', width / 2)
-            .attr('cy', height / 2)
-            .attr('class', 'bbub')
-            .attr('id', (d) => d.name)
-            .attr('r', function (d) {
-                return d.value / media * 25;
-            })
-            //.attr('r', function(d) { return d.value * factor / 200 })
-            .attr('stroke', 'blue')
-            .attr('fill', (d) => {
-                if (this.tSeleccionados.indexOf(d.name)) {
-                    return '#00ffff';
-                } else {
-                    return '#00af05';
-                }
-            });
-
-
-        // AÑADIMOS A LAS BURBUJAS LAS PALABRAS QUE LE CORRESPONDEN
-        node
-            .append('text')
-            .attr('font-size', 15)
-            .attr('x', width / 2)
-            .attr('y', height / 2)
-            .attr('dx', -15)
-            .attr('class', 'tbub')
-            .attr('id', (d) => 't' + d.name)
-            .style('color', 'black')
-            .text(function (d) {
-                return d.name;
-            });
-
-        // AÑADIMOS EFECTO DE ARRASTRAR LAS BURBUJAS
-        node.call(d3.drag()
-            .on('start', dragstarted)
-            .on('drag', dragged)
-            .on('end', dragended));
-
-
-        let ticked = () => {
-            node
-                .attr('transform', function (d) {
-                    return 'translate(' + d.x + ',' + d.y + ')';
-                });
-        };
-
-        simulation
-            .nodes(this.listaH)
-            .on('tick', ticked);
-
-
-        // FUNCIONES PARA ARRASTRAR LAS BURBUJAS
-        function dragstarted(d) {
-            simulation.restart();
-            simulation.alpha(1.0);
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
-        }
-
-        function dragended(d) {
-            d.fx = null;
-            d.fy = null;
-            simulation.alphaTarget(0.1);
-        }
-
-        let anch = $('#dbub').width();
-        let alt = $('#dbub').height();
-
-        $('#refbub').css({
-            position: 'relative',
-            top: -alt + 25 + 'px',
-            left: anch + 10 + 'px'
-        }).fadeIn();
-
-
-        // BORDE DEL DIAGRAMA
-        svg.append('rect')
-            .attr('x', margen)
-            .attr('y', margen)
-            .attr('height', height)
-            .attr('width', width)
-            .attr('stroke', 'gray')
-            .attr('fill', 'none')
-            .attr('stroke-width', 'border');
-
-
-        // AÑADIMOS UN TEXTO DE TÍTULO PARA EL DIAGRAMA
-        svg.append('text')
-            .attr('x', width / 2 + margen)
-            .attr('y', 40)
-            .attr('text-anchor', 'middle')
-            .text('Ideas principales');
-
-
-        // AÑADIMOS EL CONTROLADOR PARA LA GESTIÓN DE FILTROS AL ELEGIR UNA BURBUJA
-        d3.selectAll('.bbub')
-            .on('click', function (actual, i) {
-                let tema = d3.select(this).attr('id');
-
-                if (!that.tSeleccionados.includes(tema)) {
-                    that.tSeleccionados.push(tema);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00af05');
-                } else {
-                    that.tSeleccionados.splice(that.tSeleccionados.indexOf(tema), 1);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00ffff');
-                }
-
-                /*
-                    let indice = that.anadirTema(tema);
-                    if(indice < 0) {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00af05');
-                    }
-                    else {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00ffff');
-                    }
-                */
-
-                that.updateBody();
-                that.generateBarGraph();
-            });
-
-
-        // AÑADIMOS ANIMACIONES DE CAMBIO DE COLOR AL PASAR EL RATÓN POR ENCIMA
-        d3.selectAll('.bbub')
-            .on('mouseover', function (actual, i) {
-                d3.select(this).style('cursor', 'pointer');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(200)
-                    .attr('fill', '#0e9e9e');
-            })
-            .on('mouseout', function (actual, i) {
-                d3.select(this).style('cursor', 'default');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(1000)
-                    .attr('fill', '#00ffff');
-            });
-
-
-        // AÑADIMOS EL EFECTO DE CAMBIO DE CURSOR AL PASAR POR ENCIMA.
-        d3.selectAll('.tbub')
-            .on('mouseover', function (actual, i) {
-                d3.select(this).style('cursor', 'pointer');
-            })
-            .on('mouseout', function (actual, i) {
-                d3.select(this).style('cursor', 'default');
-            });
-
-        this.loaded['dBub1'] = true;
+        
     }
 
 
@@ -943,7 +753,7 @@ export class StatsComponent implements OnInit {
     public addYear(year: string) {
         this.toggleFilter(this.aSeleccionados, year);
         this.updateBody();
-        this.generateBubbleChart();
+        this.generateTopicsGraphData();
     }
 
 

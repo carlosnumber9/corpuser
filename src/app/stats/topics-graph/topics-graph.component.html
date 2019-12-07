@@ -1,3 +1,7 @@
-<p>
-  topics-graph works!
-</p>
+<div class="spinner align-middle">
+  <mat-spinner class="example-margin" [color]="primary" [mode]="mode" [value]="value" *ngIf="!loaded">
+  </mat-spinner>
+</div>
+<p *ngIf="!loaded"> Cargando las visualizaciones. Un momento... </p>
+<svg class="diag" id="dbub"> </svg>
+<button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
