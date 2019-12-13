@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as d3 from 'd3';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 declare var $: any;
 
@@ -17,6 +18,9 @@ export class TopicsGraphComponent implements OnChanges {
   @Output() topicWasSelected: EventEmitter<string[]> = new EventEmitter<string[]>();
 
   private loaded: boolean = false;
+  private faSync = faSync;
+
+
 
   constructor() { }
 
@@ -72,7 +76,7 @@ export class TopicsGraphComponent implements OnChanges {
             //.attr('r', function(d) { return d.value * factor / 200 })
             .attr('stroke', 'blue')
             .attr('fill', (d) => {
-                if (this.selectedTopicList.includes(d.name)) {
+                if (!this.selectedTopicList.includes(d.name)) {
                     return '#00ffff';
                 } else {
                     return '#00af05';
