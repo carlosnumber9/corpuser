@@ -45,13 +45,7 @@
                 <button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
             </div>
             <div id="cbub" class="mb-3 diagrama">
-                <div class="spinner align-middle">
-                    <mat-spinner class="example-margin" [color]="primary" [mode]="mode" [value]="value" *ngIf="!loaded['dBub1']">
-                    </mat-spinner>
-                </div>
-                <p *ngIf="!loaded['dBub1']"> Cargando las visualizaciones. Un momento... </p>
-                <svg class="diag" id="dbub"> </svg>
-                <button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
+                <topics-graph [topic-list]="listaH" [selected-topic-list]="tSeleccionados" (topicWasSelected)="onFilterSelection('TOPIC')"></topics-graph>
             </div>
         </div>
 
