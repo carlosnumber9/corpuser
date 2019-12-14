@@ -36,13 +36,7 @@
     <div class="row">
         <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
             <div id="cbar" class="mb-3 diagrama">
-                <div class="spinner align-middle">
-                    <mat-spinner class="example-margin" [color]="color" [mode]="mode" [value]="value" *ngIf="!loaded['dBar1']">
-                    </mat-spinner>
-                </div>
-                <p *ngIf="!loaded['dBar1']"> Actualizando las visualizaciones. Un momento... </p>
-                <svg class="diag" id="dbar"> </svg>
-                <button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
+                <docs-per-year-graph [docs-per-year-list]="listaY" [selected-years-list]="aSeleccionados" (yearWasSelected)="onFilterSelection('YEAR')"></docs-per-year-graph>
             </div>
             <div id="cbub" class="mb-3 diagrama">
                 <topics-graph [topic-list]="listaH" [selected-topic-list]="tSeleccionados" (topicWasSelected)="onFilterSelection('TOPIC')"></topics-graph>
