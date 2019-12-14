@@ -12,8 +12,8 @@
                 <div id="fcontainer" class="col-8">
                     <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0" class="card-subtitle text-muted float-left">Por el momento no hay filtros aplicados.</h6>
                     <div class="row">
-                        <span *ngFor="let ano of aSeleccionados" class="filtro" (click)="anadirAno(ano)"> {{ ano }} <fa-icon class="rfilter float-right" (click)="anadirAno(ano)" [icon]="faTimes"></fa-icon> </span>
-                        <span *ngFor="let tema of tSeleccionados" class="filtro" (click)="anadirTema(tema)"> {{ tema }} <fa-icon class="rfilter float-right" (click)="anadirTema(tema)" [icon]="faTimes"></fa-icon> </span>
+                        <span *ngFor="let year of aSeleccionados" class="filtro" (click)="addYear(year)"> {{ year }} <fa-icon class="rfilter float-right" (click)="addYear(year)" [icon]="faTimes"></fa-icon> </span>
+                        <span *ngFor="let topic of tSeleccionados" class="filtro" (click)="addTopic(topic)"> {{ topic }} <fa-icon class="rfilter float-right" (click)="addTopic(topic)" [icon]="faTimes"></fa-icon> </span>
                     </div>
                 </div>
                 <div class="col-3">
@@ -36,22 +36,10 @@
     <div class="row">
         <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
             <div id="cbar" class="mb-3 diagrama">
-                <div class="spinner align-middle">
-                    <mat-spinner class="example-margin" [color]="color" [mode]="mode" [value]="value" *ngIf="!loaded['dBar1']">
-                    </mat-spinner>
-                </div>
-                <p *ngIf="!loaded['dBar1']"> Actualizando las visualizaciones. Un momento... </p>
-                <svg class="diag" id="dbar"> </svg>
-                <button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
+                <docs-per-year-graph [docs-per-year-list]="listaY" [selected-years-list]="aSeleccionados" (yearWasSelected)="onFilterSelection('YEAR')"></docs-per-year-graph>
             </div>
             <div id="cbub" class="mb-3 diagrama">
-                <div class="spinner align-middle">
-                    <mat-spinner class="example-margin" [color]="primary" [mode]="mode" [value]="value" *ngIf="!loaded['dBub1']">
-                    </mat-spinner>
-                </div>
-                <p *ngIf="!loaded['dBub1']"> Cargando las visualizaciones. Un momento... </p>
-                <svg class="diag" id="dbub"> </svg>
-                <button id="refbub" class="btn btn-refresh" (click)="gen_bubbles()"> <fa-icon [icon]="faSync"></fa-icon> </button>
+                <topics-graph [topic-list]="listaH" [selected-topic-list]="tSeleccionados" (topicWasSelected)="onFilterSelection('TOPIC')"></topics-graph>
             </div>
         </div>
 

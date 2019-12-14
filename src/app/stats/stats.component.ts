@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 import { Index } from '../index.model';
 import { Document } from '../document.model';
@@ -18,13 +18,19 @@ declare var $: any;
     templateUrl: './stats.component.html',
     styleUrls: ['./stats.component.css']
 })
-export class StatsComponent implements OnInit, OnChanges {
+export class StatsComponent implements OnInit {
 
     loaded: {
         dBar1;
         dBub1;
     };
 
+    
+
+    private FILTER_TYPES = {
+        TOPIC: 'TOPIC',
+        YEAR: 'YEAR'
+    };
 
     faSync = faSync;
     faTimes = faTimesCircle;
@@ -126,6 +132,23 @@ export class StatsComponent implements OnInit, OnChanges {
     }
 
 
+    private onFilterSelection(filterType: string) {
+        switch(filterType) {
+            case this.FILTER_TYPES.TOPIC:
+                this.updateBody();
+                this.generateBarGraphData();
+                break;
+            case this.FILTER_TYPES.YEAR:
+                this.updateBody();
+                this.generateTopicsGraphData();
+                 break;
+            default:
+                console.error('[StatsComponent] Incorrect filter type selection.');
+                break;
+        }
+    }
+
+
     /**
      * Assigns to options array the list of all corpus terms
      */
@@ -141,7 +164,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 response => {
                     ids = response.hits.hits.map((elem) => (elem._id));
                 },
-                error => console.log(error)
+                error => console.error(error)
             );
 
 
@@ -158,17 +181,16 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 }
 
-                let sortedByOccurrenceCountTerms = terminos
+                terminos
                     .sort((elem1, elem2) => {
                         return (elem1['value'] > elem2['value']) ? -1 : 1;
                     });
-                //.slice(0, 6);
 
-                this.options = sortedByOccurrenceCountTerms.map(elem => elem['name']);
+                this.options = terminos.map(elem => elem['name']);
 
             }, (err) => {
-                console.log('Error con los term vectors.');
-                console.log(err);
+                console.error('[StatsComponent] Error retrieving total term list');
+                console.error(err);
             }
         );
     }
@@ -193,7 +215,7 @@ export class StatsComponent implements OnInit, OnChanges {
                     name: elem['_source'].title
                 }));
 
-            }, error => console.log(error)
+            }, error => console.error(error)
         );
 
     }
@@ -268,7 +290,6 @@ export class StatsComponent implements OnInit, OnChanges {
         this.lista = this.getTotalDocumentList();
         Object.assign(this.listaH);
 
-        let maximo = $('#diagramas').height();
         let htitle = $('#listtitle').outerHeight();
         let hinput = $('#nfilter').outerHeight();
         let maxcont = 550 - htitle - hinput;
@@ -290,36 +311,16 @@ export class StatsComponent implements OnInit, OnChanges {
         }
 
         this.updateBody();
-        this.generateBubbleChart();
-        this.generateBarGraph();
-
+        this.generateTopicsGraphData();
+        this.generateBarGraphData();
 
         /*
             if(!this.idSelName.includes(id)) this.idSelName.push(id);
             else delete this.idSelName[this.idSelName.indexOf(id)];
-
-            console.log(this.idSelName);
-
-
             this.gen_bubbles();
             this.gen_dTemas();
         */
     }
-
-
-    onSelect(event) {
-        console.log(event);
-        console.log('Aquí se pueden hacer cositass');
-        console.log(event.name);
-    }
-
-
-    ngOnChanges(): void {
-        if (!this.listaH) {
-            return;
-        }
-    }
-
 
     /**
      * Retrieves the total document list for the selected index
@@ -338,11 +339,11 @@ export class StatsComponent implements OnInit, OnChanges {
                     };
                     docRes.push(docToInsert);
                 }
-                this.generateBarGraph();
-                this.generateBubbleChart();
+                this.generateBarGraphData();
+                this.generateTopicsGraphData();
             }, error => {
                 console.error(error);
-                console.log('There was an error trying to retrieve the total document list. (getTotalDocumentList)');
+                console.error('[StatsComponent] There was an error trying to retrieve the total document list. (getTotalDocumentList)');
             });
         return docRes;
     }
@@ -423,7 +424,7 @@ export class StatsComponent implements OnInit, OnChanges {
                 });
             }
 
-            this.listaH = this.listaH.sort((elem1, elem2) => {
+            this.listaH.sort((elem1, elem2) => {
                 return (elem1['value'] > elem2['value']) ? -1 : 1;
             });
 
@@ -439,70 +440,21 @@ export class StatsComponent implements OnInit, OnChanges {
 
         this.updateBody();
 
-        this.generateBubbleChart();
-        this.generateBarGraph();
+        this.generateTopicsGraphData();
+        this.generateBarGraphData();
 
     }
 
 
-    /*
-      get_YV(){
+    public async generateBarGraphData() {
 
-        let result = [];
-
-        for(let doc of this.lista){
-          let fecha = new Date(doc.fecha);
-          let ano = (doc.fecha) ? fecha.getFullYear() : "(Desconocido)";
-
-          if(ano == "(Desconocido)") {
-            this.corpusLimpio = false;
-            this.noLimpios = this.noLimpios + 1;
-          }
-          else{
-            let encontrado = false;
-          for(let elem of result){
-            if(ano == "(Desconocido)") break;
-            if(elem.ano == ano) {
-              elem.reps = elem.reps + 1;
-              encontrado = true;
-            }
-          }
-
-          if(!encontrado) result.push({
-            ano : ano,
-            reps : 1
-          });
-          }
-
-
-        }
-
-        //for(let elem of result) console.log("Año " + elem.ano + " con " + elem.reps + " documentos.");
-
-        result = result.sort((elem1, elem2) => {
-          if(elem1["ano"] == "(Desconocido)") return -1;
-          else if (elem2["ano"] == "(Desconocido)") return 1;
-          else return (elem1["ano"] < elem2["ano"]) ? -1 : 1;
-        });
-
-
-
-
-        this.listaY = result;
-
-      }
-    */
-
-
-    public async generateBarGraph() {
-
-        const that = this;
         d3.select('#dbar').html('');
         //this.listaY = [];
 
         this.loaded['dBar1'] = false;
 
-        let rest = 0;
+        // TODO: Recover rest variable utility with data service
+        // let rest = 0;
         // Creamos body, el cuerpo de la petición para sacar los documentos por año.
 
         // Llamamos al método de búsqueda del servicio de ES y metemos la info en listaY.
@@ -516,258 +468,38 @@ export class StatsComponent implements OnInit, OnChanges {
 
                 this.idSel = response.hits.hits.map((elem) => (elem._id));
 
-                rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
+                // rest = response.hits.total - d3.sum(this.listaY.map(e => e.reps));
 
             },
                 error => {
-                    console.log(error);
+                    console.error(error);
                 });
-
-        // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
-        const margin = 60;
-        const width = 600 - 2 * margin;
-        const height = 350 - 2 * margin;
-
-        // ALMACENAMOS EN UNA VARIABLE EL CONTENEDOR SVG
-        const svg = d3.select('#dbar')
-            .attr('width', '600')
-            .attr('height', '370');
-
-        // CREAMOS LA REGIÓN DEL DIAGRAMA DENTRO DEL SVG
-        const chart = svg.append('g')
-            .attr('transform', `translate(${margin}, ${margin})`);
-
-        // ESTABLECEMOS LA ESCALA DEL EJE Y
-        const yScale = d3.scaleLinear()
-            .range([height, 0])
-            .domain([0, d3.max(this.listaY.map((s) => s.reps))]);
-
-        // CREAMOS EL EJE Y UTILIZANDO SU ESCALA
-        chart.append('g')
-            .call(d3.axisLeft(yScale));
-
-        // ESTABLECEMOS LA ESCALA DEL EJE X
-        const xScale = d3.scaleBand()
-            .range([0, width])
-            .domain(this.listaY.map((s) => s.ano))
-            .padding(0.2);
-
-        // CREAMOS EL EJE X UTILIZANDO SU ESCALA
-        chart.append('g')
-            .attr('transform', `translate(0, ${height})`)
-            .call(d3.axisBottom(xScale));
-
-        // AÑADIMOS LÍNEAS VERTICALES DE REFERENCIA PARA EL FONDO
-        /*
-        chart.append('g')
-          .attr('class', 'grid')
-          .attr('transform', `translate(0, ${height})`)
-          .call(d3.axisBottom()
-            .scale(xScale)
-            .tickSize(-height, 0, 0)
-            .tickFormat(''));
-        */
-
-        // AÑADIMOS LÍNEAS HORIZONTALES DE REFERENCIA PARA EL FONDO
-        /*
-        chart.append('g')
-          .attr('class', 'grid')
-          .attr('opacity', '0.3')
-          .call(d3.axisLeft()
-            .scale(yScale)
-            .tickSize(-width, 0, 0)
-            .tickFormat(''));
-        */
-
-
-        // AÑADIMOS LAS BARRAS PARA CADA ELEMENTO DE LA LISTA (DATOS)
-        let barras = chart.selectAll()
-            .data(this.listaY)
-            .enter()
-            .append('rect')
-            .attr('x', (s) => xScale(s.ano))
-            .attr('y', (s) => yScale(s.reps))
-            .attr('height', (s) => height - yScale(s.reps))
-            .attr('width', xScale.bandwidth())
-            .attr('fill', (d) => {
-                if (this.aSeleccionados.indexOf(d.ano)) {
-                    return '#00ffff';
-                } else {
-                    return '#00af05';
-                }
-            })
-            .attr('stroke', 'blue')
-            .attr('id', (s) => s.ano)
-            .attr('class', 'bbar');
-
-
-        // AÑADIMOS ETIQUETA PARA EL EJE Y
-        svg.append('text')
-            .attr('x', -(height / 2) - margin)
-            .attr('y', margin / 2.4)
-            .attr('transform', 'rotate(-90)')
-            .attr('text-anchor', 'middle')
-            .text('Número de documentos');
-
-        // AÑADIMOS ETIQUETA PARA EL EJE X
-        svg.append('text')
-            .attr('x', (width / 2) + margin)
-            .attr('y', (height * 1.155) + margin)
-            .attr('text-anchor', 'middle')
-            .text('Año de publicación');
-
-
-        if (rest) {
-            let aux = (rest == 1) ? 'Existe' : 'Existen';
-            let aux1 = (rest == 1) ? 'documento' : 'documentos';
-            svg.append('text')
-                .attr('x', (width / 2) + margin)
-                .attr('y', (height * 1.155) + 1.4 * margin)
-                .attr('text-anchor', 'middle')
-                .attr('font-size', 13)
-                .text(aux + ' ' + rest + ' ' + aux1 + ' sin fecha de publicación conocida.');
-        }
-
-
-        let anch = $('#dbar').width();
-        let alt = $('#dbar').height();
-
-        $('#refbar').css({
-            position: 'relative',
-            top: -alt + 5 + 'px',
-            left: anch + 30 + 'px'
-        }).fadeIn();
-
-
-        // AÑADIMOS UN TEXTO DE TÍTULO PARA EL DIAGRAMA
-        svg.append('text')
-            .attr('x', width / 2 + margin)
-            .attr('y', 40)
-            .attr('text-anchor', 'middle')
-            .text('Cronología del corpus');
-
-
-        // AÑADIMOS EL EFECTO DE CAMBIO DE CURSOR AL PASAR POR ENCIMA.
-        d3.selectAll('rect')
-            .on('mouseover', function (actual, i) {
-                d3.select(this).style('cursor', 'pointer');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(200)
-                    .attr('opacity', '0.5');
-            })
-            .on('mouseout', function (actual, i) {
-                d3.select(this).style('cursor', 'default');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(1000)
-                    .attr('opacity', '1');
-            });
-
-
-        // AÑADIMOS LAS FUNCIONES DE INTERACTIVIDAD AL ELEGIR (PULSAR) UN AÑO DEL DIAGRAMA.
-        d3.selectAll('.bbar')
-            .on('click', async function (actual, i) {
-
-                let ano = d3.select(this).attr('id');
-                //console.log("Se quiere insertar el año " + ano + " en tSeleccionados.");
-
-                //if(that.aSeleccionados.length == 0) console.log("La lista de años está vacía.");
-
-
-                if (!that.aSeleccionados.includes(ano)) {
-                    that.aSeleccionados.push(ano);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00af05');
-                } else {
-                    that.aSeleccionados.splice(that.aSeleccionados.indexOf(ano), 1);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00ffff');
-                }
-
-                /*
-                    let indice = that.anadirAno(ano);
-                    if(indice < 0) {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00af05');
-                    }
-                    else {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00ffff');
-                    }
-                */
-                await that.updateBody();
-                that.generateBubbleChart();
-
-
-            });
-
-
-        // BORDE DEL DIAGRAMA
-        let borde = svg.append('rect')
-            .attr('x', margin)
-            .attr('y', margin)
-            .attr('height', height)
-            .attr('width', width)
-            .attr('stroke', 'gray')
-            .attr('fill', 'none')
-            .attr('stroke-width', 'border');
-
-
-        this.loaded['dBar1'] = true;
-
-
     }
 
 
-    public async generateBubbleChart() {
-
+    /**
+     * Updates topics list with current body object
+     */
+    public async generateTopicsGraphData() {
 
         d3.select('#dbub').html('');
         this.listaH = [];
-
-        this.loaded['dBub1'] = false;
-
         let ids = [];
-        
+
         await this.elastic.search(this.index, this.body)
             .then(response => {
-
                 this.idSel = response.hits.hits.map((elem) => elem._id);
                 ids = (this.idSelName.length > 0) ? this.idSelName : this.idSel;
-
-
-                //if(this.idSelName.length == 0) this.idSel = ids;
-                //else this.idSel = this.idSelName;
-                //let intersec = ids.filter((elem) => this.idSelName.includes(elem));
-
-
-            }, error => console.log(error));
+            }, error => console.error(error));
 
         // Realizamos una petición de multiterm vectors para obtener los temas.
-        console.log('index = ' + this.index);
-
         await this.elastic.getTermsList('testdocs', 'attachment.content', ids).then(
             response => {
 
                 let terms = {};
                 for (let doc of response.docs) {
-
-                    //console.log("Los terms para el documento " + doc._id + " son:");
-                    //console.log(doc.term_vectors["attachment.content"].terms);
-
-
                     Object.assign(terms, doc.term_vectors['attachment.content'].terms);
                 }
-
 
                 for (let key in terms) {
                     this.listaH.push({
@@ -776,273 +508,55 @@ export class StatsComponent implements OnInit, OnChanges {
                     });
                 }
 
-                this.listaH = this.listaH
+                this.listaH
                     .sort((elem1, elem2) => {
                         return (elem1['value'] > elem2['value']) ? -1 : 1;
-                    })
-                    .slice(0, 15);
+                    });
+
+                this.listaH = this.listaH.slice(0, 15);
 
             }, (err) => {
-                console.log('Error con los term vectors.');
-                console.log(err);
+                console.error('[StatsComponent] Error trying to get term list for bubble chart.');
+                console.error(err);
             }
         );
-
-
-        let that = this;
-
-        let margen = 20;
-        const width = 600 - 2 * margen;
-        const height = 350 - 2 * margen;
-        let color = d3.scaleOrdinal(d3.schemeCategory10);
-        let factor = d3.min(this.listaH.map((d) => d.value));
-        let maximo = d3.max(this.listaH.map((d) => d.value));
-        let media = d3.mean(this.listaH.map((d) => d.value));
-
-
-        // SELECCIONAMOS EL OBJETO SVG Y LE APLICAMOS LAS DIMENSIONES
-        const svg = d3.select('#dbub')
-            .attr('width', 600)
-            .attr('height', 350);
-
-
-        // ESTABLECEMOS LAS FUERZAS QUE VAN A PRODUCIRSE ENTRE LAS BURBUJAS
-        let simulation = d3.forceSimulation()
-            .force('collide', d3.forceCollide(35).iterations(1000))
-            .force('charge', d3.forceManyBody().strength(-300).distanceMin(300).distanceMax(400))
-            .force('atract', d3.forceManyBody().strength(450).distanceMin(400).distanceMax(500));
-
-
-        // AÑADIMOS DENTRO DEL SVG LOS NODOS DE INFORMACIÓN
-        let node = svg.selectAll('g')
-            .data(this.listaH)
-            .enter()
-            .append('g')
-            .attr('class', 'node');
-
-
-        // CREAMOS LAS BURBUJAS DENTRO DE LOS NODOS
-        let circles = node
-            .append('circle')
-            .attr('cx', width / 2)
-            .attr('cy', height / 2)
-            .attr('class', 'bbub')
-            .attr('id', (d) => d.name)
-            .attr('r', function (d) {
-                return d.value / media * 25;
-            })
-            //.attr('r', function(d) { return d.value * factor / 200 })
-            .attr('stroke', 'blue')
-            .attr('fill', (d) => {
-                if (this.tSeleccionados.indexOf(d.name)) {
-                    return '#00ffff';
-                } else {
-                    return '#00af05';
-                }
-            });
-
-
-        // AÑADIMOS A LAS BURBUJAS LAS PALABRAS QUE LE CORRESPONDEN
-        let text = node
-            .append('text')
-            .attr('font-size', 15)
-            .attr('x', width / 2)
-            .attr('y', height / 2)
-            .attr('dx', -15)
-            .attr('class', 'tbub')
-            .attr('id', (d) => 't' + d.name)
-            .style('color', 'black')
-            .text(function (d) {
-                return d.name;
-            });
-
-        // AÑADIMOS EFECTO DE ARRASTRAR LAS BURBUJAS
-        node.call(d3.drag()
-            .on('start', dragstarted)
-            .on('drag', dragged)
-            .on('end', dragended));
-
-
-        let ticked = () => {
-            node
-                .attr('transform', function (d) {
-                    return 'translate(' + d.x + ',' + d.y + ')';
-                });
-        };
-
-        simulation
-            .nodes(this.listaH)
-            .on('tick', ticked);
-
-
-        // FUNCIONES PARA ARRASTRAR LAS BURBUJAS
-        function dragstarted(d) {
-            simulation.restart();
-            simulation.alpha(1.0);
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
-        }
-
-        function dragended(d) {
-            d.fx = null;
-            d.fy = null;
-            simulation.alphaTarget(0.1);
-
-        }
-
-
-        let anch = $('#dbub').width();
-        let alt = $('#dbub').height();
-
-        $('#refbub').css({
-            position: 'relative',
-            top: -alt + 25 + 'px',
-            left: anch + 10 + 'px'
-        }).fadeIn();
-
-
-        // BORDE DEL DIAGRAMA
-        let borde = svg.append('rect')
-            .attr('x', margen)
-            .attr('y', margen)
-            .attr('height', height)
-            .attr('width', width)
-            .attr('stroke', 'gray')
-            .attr('fill', 'none')
-            .attr('stroke-width', 'border');
-
-
-        // AÑADIMOS UN TEXTO DE TÍTULO PARA EL DIAGRAMA
-        svg.append('text')
-            .attr('x', width / 2 + margen)
-            .attr('y', 40)
-            .attr('text-anchor', 'middle')
-            .text('Ideas principales');
-
-
-        // AÑADIMOS EL CONTROLADOR PARA LA GESTIÓN DE FILTROS AL ELEGIR UNA BURBUJA
-        d3.selectAll('.bbub')
-            .on('click', function (actual, i) {
-                let tema = d3.select(this).attr('id');
-                console.log('Se quiere insertar el tema ' + tema + ' en tSeleccionados.');
-
-
-                if (!that.tSeleccionados.includes(tema)) {
-                    that.tSeleccionados.push(tema);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00af05');
-                } else {
-                    that.tSeleccionados.splice(that.tSeleccionados.indexOf(tema), 1);
-                    d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style('fill', '#00ffff');
-                }
-
-                /*
-                    let indice = that.anadirTema(tema);
-                    if(indice < 0) {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00af05');
-                    }
-                    else {
-                      d3.select(this).transition()
-                        .ease(d3.easeBack)
-                        .duration(200)
-                        .style("fill", '#00ffff');
-                    }
-                */
-
-
-                that.updateBody();
-                that.generateBarGraph();
-
-
-            });
-
-
-        // AÑADIMOS ANIMACIONES DE CAMBIO DE COLOR AL PASAR EL RATÓN POR ENCIMA
-        d3.selectAll('.bbub')
-            .on('mouseover', function (actual, i) {
-                d3.select(this).style('cursor', 'pointer');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(200)
-                    .attr('fill', '#0e9e9e');
-            })
-            .on('mouseout', function (actual, i) {
-                d3.select(this).style('cursor', 'default');
-                d3.select(this).transition()
-                    .ease(d3.easeBack)
-                    .duration(1000)
-                    .attr('fill', '#00ffff');
-            });
-
-
-        // AÑADIMOS EL EFECTO DE CAMBIO DE CURSOR AL PASAR POR ENCIMA.
-        d3.selectAll('.tbub')
-            .on('mouseover', function (actual, i) {
-                d3.select(this).style('cursor', 'pointer');
-            })
-            .on('mouseout', function (actual, i) {
-                d3.select(this).style('cursor', 'default');
-            });
-
-
-        this.loaded['dBub1'] = true;
-
-
-        console.log('Ahora idSel vale:');
-        console.log(this.idSel);
-
-
+        
     }
 
 
-    public anadirTema(tema: string): number {
-
-        let indice = this.tSeleccionados.indexOf(tema);
-
-        if (indice < 0) {
-            this.tSeleccionados.push(tema);
-        } else {
-            this.tSeleccionados.splice(indice, 1);
-        }
-
+    /**
+     * Adds/Removes clicked topic to/from selected topics array and updates graphs
+     * @param topic New topic to be added/removed from selected topics list
+     */
+    public addTopic(topic: string) {
+        this.toggleFilter(this.tSeleccionados, topic);
         this.updateBody();
-        this.generateBarGraph();
-
-
-        return indice;
-
+        this.generateBarGraphData();
     }
 
 
-    public anadirAno(ano: string): number {
-
-        let indice = this.aSeleccionados.indexOf(ano);
-
-        if (indice < 0) {
-            this.aSeleccionados.push(ano);
-        } else {
-            this.aSeleccionados.splice(indice, 1);
+    /**
+     * Adds filter to array if its not in, removes from array if it does
+     */
+    private toggleFilter(filterArray: string[], filter: string) {
+        let index = filterArray.indexOf(filter);
+        if(index) {
+            filterArray.splice(index, 1);
         }
+        else {
+            filterArray.push(filter);
+        }
+    }
 
+
+    /**
+     * Adds a year filter to body global object
+     * @param year Year to apply new filter for
+     */
+    public addYear(year: string) {
+        this.toggleFilter(this.aSeleccionados, year);
         this.updateBody();
-        this.generateBubbleChart();
-
-
-        return indice;
-
+        this.generateTopicsGraphData();
     }
 
 
@@ -1094,17 +608,8 @@ export class StatsComponent implements OnInit, OnChanges {
                     }
                 }
             });
-
-            //console.log("Se va a poner un filtro entre los años " + d3.min(this.aSeleccionados) + " y " + d3.max(this.aSeleccionados) + ".");
         }
-
-
-        console.log("Ahora idSel vale:");
-        console.log(this.body);
-        console.log(JSON.stringify(this.body, null, 4));
-
     }
-
 
 }
 
