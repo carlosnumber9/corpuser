@@ -28,6 +28,9 @@ export class TopicsGraphComponent implements OnChanges {
     if(this.topicList.length) {
       this.generateGraph();
     }
+    else {
+        this.loaded = false;
+    }
   }
 
 
