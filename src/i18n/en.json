@@ -1,0 +1,12 @@
+{
+    "app" : {
+        "navBar": {
+            "home": "Home",
+            "addDocuments": "Add documents",
+            "visualizeData": "Visualize data"
+        }
+    },
+    "menu": {},
+    "upload": {},
+    "stats": {}
+}
