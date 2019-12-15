@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ElasticsearchService } from '../elasticsearch.service';
+import { ElasticsearchService } from '../../elasticsearch.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { fadeAnimation } from '../animations';
+import { fadeAnimation } from '../../animations';
 import { ActivatedRoute } from '@angular/router';
 
 declare var $: any;
