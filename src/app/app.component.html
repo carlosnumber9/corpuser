@@ -3,7 +3,7 @@
 <img class="upmblogo" src="assets/img/upmlogob.png" />
 
 <select #langSelect (change)='translate.use(langSelect.value)' class="lang-select">
-    <option *ngFor="let language of translate.getLangs()" value='language'> {{ language }} </option>
+    <option *ngFor="let language of translate.getLangs()" [value]='language'> {{ language }} </option>
 </select>
 
 <div style="text-align:center" class="titulo">

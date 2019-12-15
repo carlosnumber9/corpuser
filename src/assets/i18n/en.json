@@ -1,5 +1,8 @@
 {
     "app" : {
+        "languageSelector": {
+            "language": "Language"
+        },
         "navBar": {
             "home": "Home",
             "addDocuments": "Add documents",

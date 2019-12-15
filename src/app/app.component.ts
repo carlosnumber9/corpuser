@@ -28,15 +28,20 @@ export class AppComponent implements OnInit {
     footerTop = '0';
     selectedIndex: string;
 
+    selectedLanguage: string = 'es';
+
     constructor(public router: Router, public elastic: ElasticsearchService, public translate: TranslateService) {
         this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
         translate.addLangs([
-            CONSTANTS.LANGUAGES.ENGLISH.KEY,
-            CONSTANTS.LANGUAGES.SPANISH.KEY
+            CONSTANTS.LANGUAGES.SPANISH.KEY,
+            CONSTANTS.LANGUAGES.ENGLISH.KEY
         ]);
         translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
         const browserLanguage = translate.getBrowserLang();
-        translate.use((translate.getLangs().indexOf(browserLanguage) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY));
+        this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
+        translate.use(this.selectedLanguage);
+        // TODO: Keep selected language on page refresh (localStorage)
+        // localStorage.setItem("language", this.selectedLanguage);
     }
 
     public getRouterOutletState(outlet) {
