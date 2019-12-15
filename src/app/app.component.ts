@@ -6,6 +6,9 @@ import {ResizedEvent} from 'angular-resize-event';
 import {Router} from '@angular/router';
 
 import {ElasticsearchService} from './elasticsearch.service';
+import { TranslateService } from '@ngx-translate/core';
+import { CONSTANTS } from '../constants';
+
 
 
 declare var $: any;
@@ -25,8 +28,15 @@ export class AppComponent implements OnInit {
     footerTop = '0';
     selectedIndex: string;
 
-    constructor(public router: Router, public elastic: ElasticsearchService) {
+    constructor(public router: Router, public elastic: ElasticsearchService, public translate: TranslateService) {
         this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
+        translate.addLangs([
+            CONSTANTS.LANGUAGES.ENGLISH.KEY,
+            CONSTANTS.LANGUAGES.SPANISH.KEY
+        ]);
+        translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
+        const browserLanguage = translate.getBrowserLang();
+        translate.use((translate.getLangs().indexOf(browserLanguage) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY));
     }
 
     public getRouterOutletState(outlet) {
