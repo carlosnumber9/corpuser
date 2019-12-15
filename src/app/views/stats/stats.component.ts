@@ -1,9 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
-import { Index } from '../index.model';
-import { Document } from '../document.model';
+import { Index } from '../../index.model';
+import { Document } from '../../document.model';
 import { HttpHeaders } from '@angular/common/http';
-import { ElasticsearchService } from '../elasticsearch.service';
+import { ElasticsearchService } from '../../elasticsearch.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';

@@ -7,13 +7,13 @@ import { NgModule } from '@angular/core';
 import { routing } from './app.routing';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MenuComponent } from './menu/menu.component';
-import { UploadComponent } from './upload/upload.component';
-import { StatsComponent } from './stats/stats.component';
-import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
-import { TopicsGraphComponent } from './stats/topics-graph/topics-graph.component';
-import { DocsPerYearGraphComponent } from './stats/docs-per-year-graph/docs-per-year-graph.component';
-import { TitleListComponent } from './stats/title-list/title-list.component';
+import { MenuComponent } from './views/menu/menu.component';
+import { UploadComponent } from './views/upload/upload.component';
+import { StatsComponent } from './views/stats/stats.component';
+import { NoPageFoundComponent } from './views/no-page-found/no-page-found.component';
+import { TopicsGraphComponent } from './fragments/topics-graph/topics-graph.component';
+import { DocsPerYearGraphComponent } from './fragments/docs-per-year-graph/docs-per-year-graph.component';
+import { TitleListComponent } from './fragments/title-list/title-list.component';
 
 
 import { ElasticsearchService } from './elasticsearch.service';
@@ -32,7 +32,8 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IndexListComponent } from './menu/index-list/index-list.component';
+import { IndexListComponent } from './fragments/index-list/index-list.component';
+import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spinner.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { IndexListComponent } from './menu/index-list/index-list.component';
     TopicsGraphComponent,
     DocsPerYearGraphComponent,
     TitleListComponent,
-    IndexListComponent
+    IndexListComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,

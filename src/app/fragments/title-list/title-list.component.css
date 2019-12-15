@@ -9,6 +9,7 @@
 
 .list-container {
     min-height: 400px;
+    max-height: 800px;
     width: 90%;
     border: 1px solid gray;
     margin-left: 5%;
