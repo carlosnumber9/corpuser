@@ -9,9 +9,7 @@
         <div *ngFor="let title of totalTitleList | filter : searchText" (click)="selectTitle(title.id)" id="document{{ title.id }}" class="title text-truncate" [ngClass]="{'title-selected': isDocumentIncluded(title)}">
             {{ title.name }}
         </div>
-
-        <!-- TODO: Add spinner for title list loading (LOADING SPINNER COMPONENT TASK) -->
-
+        <loading-spinner [loaded]="totalTitleList.length > 0"></loading-spinner>
         <!-- TODO: Add correct ngIf condition for error text -->
         <p *ngIf="!totalTitleList.length"> No hay documentos disponibles. </p>
     </div>

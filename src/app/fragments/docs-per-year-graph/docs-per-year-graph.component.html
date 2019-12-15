@@ -1,7 +1,3 @@
-<div class="spinner align-middle">
-  <mat-spinner class="example-margin" [color]="color" [mode]="mode" [value]="value" *ngIf="!loaded">
-  </mat-spinner>
-</div>
-<p *ngIf="!loaded"> Actualizando las visualizaciones. Un momento... </p>
+<loading-spinner [loaded]="loaded"></loading-spinner>
 <svg class="diag" id="dbar"> </svg>
-<button id="refbar" class="btn btn-refresh" (click)="gen_dTemas()"> <fa-icon [icon]="faSync"></fa-icon>  </button>
+<button id="refbar" class="btn btn-refresh" (click)="generateGraph()"> <fa-icon [icon]="faSync"></fa-icon>  </button>

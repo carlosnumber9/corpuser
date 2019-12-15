@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './title-list.component.html',
   styleUrls: ['./title-list.component.css']
 })
-export class TitleListComponent implements OnInit {
+export class TitleListComponent {
 
   nFilter = new FormControl();
 
@@ -15,6 +15,8 @@ export class TitleListComponent implements OnInit {
   @Input('filtered-title-id-list') filteredTitleIdList: string[];
 
   @Output() titleWasSelected: EventEmitter<number> = new EventEmitter<number>();
+
+  private loaded: boolean = false;
 
   /**
      * Verifies wheter the document is included inside active filters
@@ -35,6 +37,4 @@ export class TitleListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
 }
