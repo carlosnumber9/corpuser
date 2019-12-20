@@ -1,5 +1,6 @@
 {
     "app" : {
+        "name": "Documental Corpus Management",
         "languageSelector": {
             "language": "Language"
         },
@@ -9,7 +10,13 @@
             "visualizeData": "Visualize data"
         }
     },
-    "menu": {},
+    "menu": {
+        "intro": {
+            "title": "Welcome to your dataset graphic visualization web service.",
+            "first_paragraph": "El mundo de la información evoluciona. Nos vemos obligados cada día a adaptar nuestra tecnología a la oleada de cantidades de datos cada vez más extensas. A la vez que aumenta la necesidad de generar sistemas que aseguren su protección y capacidad de salvaguarda, es necesario el desarrollo de nuevos servicios que nos permitan conocer de una manera auxiliar y sencilla las características de los conjuntos de información que poseemos.",
+            "second_paragraph": "Por ello, este proyecto, desarrollado inicialmente como un Trabajo de Fin de Grado, pretende poner de manifiesto las utilidades llevadas por tecnologías web que nos permiten analizar nuestros propios corpus documentales, por medio de gráficas interactivas."
+        }
+    },
     "upload": {},
     "stats": {}
 }

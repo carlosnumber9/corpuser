@@ -21,7 +21,6 @@ declare var $: any;
     animations: [fadeAnimation]
 })
 export class AppComponent implements OnInit {
-    title = 'Gestión de Corpus Documentales';
 
     footer = $('footer');
     footerHeight = 0;
