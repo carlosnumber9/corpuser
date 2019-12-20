@@ -2,7 +2,8 @@
 
 <img class="upmblogo" src="assets/img/upmlogob.png" />
 
-<select #langSelect (change)='translate.use(langSelect.value)' class="lang-select">
+<select #langSelect (change)='selectLanguage(langSelect.value)' class="lang-select">
+    <option disabled> {{ 'app.languageSelector.language' | translate }} </option>
     <option *ngFor="let language of translate.getLangs()" [value]='language'> {{ language }} </option>
 </select>
 

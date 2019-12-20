@@ -37,15 +37,21 @@ export class AppComponent implements OnInit {
             CONSTANTS.LANGUAGES.ENGLISH.KEY
         ]);
         translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
-        const browserLanguage = translate.getBrowserLang();
+        const localStorageLanguage = localStorage.getItem('language');
+        const browserLanguage = (localStorageLanguage) ? localStorageLanguage : translate.getBrowserLang();
         this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
         translate.use(this.selectedLanguage);
         // TODO: Keep selected language on page refresh (localStorage)
-        // localStorage.setItem("language", this.selectedLanguage);
+        localStorage.setItem('language', this.selectedLanguage);
     }
 
     public getRouterOutletState(outlet) {
         return outlet.isActivated ? outlet.activatedRoute : '';
+    }
+
+    selectLanguage(language: string) {
+        this.translate.use(language);
+        localStorage.setItem('language', language);
     }
 
 
