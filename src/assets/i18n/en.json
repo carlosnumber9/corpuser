@@ -1,0 +1,30 @@
+{
+    "app" : {
+        "name": "Documental Corpus Management",
+        "languageSelector": {
+            "language": "Language"
+        },
+        "navBar": {
+            "home": "Home",
+            "addDocuments": "Add documents",
+            "visualizeData": "Visualize data"
+        }
+    },
+    "menu": {
+        "intro": {
+            "title": "Welcome to your dataset graphic visualization web service.",
+            "first_paragraph": "The world of global information is evolving. Everyday, we're forced to adapt our technological environment for upcoming waves of extensive data amounts. At the same time it's necessary to generate system to protect information, it's necessary to develop new services to access our documents' most important characteristics, in the simplest of ways.",
+            "second_paragraph": "Because of that, this project - developed initially as a final university degree project - tries to manifest the ultimate web techonologies features which permit us to analyze our own documental corpuses using interactive graphs.",
+        },
+        "indexList": {
+            "title": "Check the current online index list",
+            "subtitle": "Select a corpus to begin",
+            "inputPlaceholder": "... or create a new one",
+            "create": "Create",
+            "documents": "documents",
+            "creating": "Creating index..."
+        }
+    },
+    "upload": {},
+    "stats": {}
+}
