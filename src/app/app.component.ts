@@ -1,18 +1,12 @@
-import {Component, OnInit, ElementRef, HostListener, OnChanges, SimpleChanges} from '@angular/core';
-
+import {Component, OnInit, HostListener } from '@angular/core';
 import {fadeAnimation} from './animations';
-
 import {ResizedEvent} from 'angular-resize-event';
 import {Router} from '@angular/router';
-
 import {ElasticsearchService} from './elasticsearch.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CONSTANTS } from '../constants';
 
-
-
 declare var $: any;
-
 
 @Component({
     selector: 'app-root',
@@ -22,29 +16,49 @@ declare var $: any;
 })
 export class AppComponent implements OnInit {
 
+
+    // ---------------------------------------- ATTRIBUTES ----------------------------------------
+
     footer = $('footer');
     footerHeight = 0;
     footerTop = '0';
     selectedIndex: string;
-
     selectedLanguage: string = 'es';
+
+
+    // ---------------------------------------- INIT METHODS ----------------------------------------
+
 
     constructor(public router: Router, public elastic: ElasticsearchService, public translate: TranslateService) {
         this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
-        translate.addLangs([
+        this.setupi18n();
+    }
+
+    ngOnInit() {
+        this.stickyFooter();
+        setTimeout(function () {
+            $('footer').fadeIn();
+        }, 2000);
+    }
+
+
+    // ---------------------------------------- AUXILIARY METHODS ----------------------------------------
+
+
+    setupi18n() {
+        this.translate.addLangs([
             CONSTANTS.LANGUAGES.SPANISH.KEY,
             CONSTANTS.LANGUAGES.ENGLISH.KEY
         ]);
-        translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
+        this.translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
         const localStorageLanguage = localStorage.getItem('language');
-        const browserLanguage = (localStorageLanguage) ? localStorageLanguage : translate.getBrowserLang();
-        this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
-        translate.use(this.selectedLanguage);
-        // TODO: Keep selected language on page refresh (localStorage)
+        const browserLanguage = (localStorageLanguage) ? localStorageLanguage : this.translate.getBrowserLang();
+        this.selectedLanguage = (this.translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
+        this.translate.use(this.selectedLanguage);
         localStorage.setItem('language', this.selectedLanguage);
     }
 
-    public getRouterOutletState(outlet) {
+    getRouterOutletState(outlet: any) {
         return outlet.isActivated ? outlet.activatedRoute : '';
     }
 
@@ -53,12 +67,10 @@ export class AppComponent implements OnInit {
         localStorage.setItem('language', language);
     }
 
-
     /**
      * Method for app footer relocation
      */
     stickyFooter() {
-
         const footer = $('footer');
         const allBodyElements = $('body *');
         footer.css('opacity', 0);
@@ -85,28 +97,14 @@ export class AppComponent implements OnInit {
         setTimeout(function () {
             footer.animate({'opacity': 1});
         }, 1000);
-
-
     }
 
     onResized(event: ResizedEvent) {
         this.stickyFooter();
     }
 
-
     @HostListener('window:resize', ['$event'])
     onResize(event) {
         this.stickyFooter();
     }
-
-    ngOnInit() {
-
-        this.stickyFooter();
-
-        setTimeout(function () {
-            $('footer').fadeIn();
-        }, 2000);
-
-    }
-
 }
