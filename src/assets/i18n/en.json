@@ -21,7 +21,8 @@
             "subtitle": "Select a corpus to begin",
             "inputPlaceholder": "... or create a new one",
             "create": "Create",
-            "documents": "documents"
+            "documents": "documents",
+            "creating": "Creating index..."
         }
     },
     "upload": {},
