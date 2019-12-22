@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { TranslateService } from '@ngx-translate/core';
 
 declare var $: any;
 
@@ -22,7 +23,7 @@ export class TopicsGraphComponent implements OnChanges {
 
 
 
-  constructor() { }
+  constructor(private translate: TranslateService) { }
 
   ngOnChanges() {
     if(this.topicList.length) {
@@ -165,7 +166,7 @@ export class TopicsGraphComponent implements OnChanges {
             .attr('x', width / 2 + margen)
             .attr('y', 40)
             .attr('text-anchor', 'middle')
-            .text('Ideas principales');
+            .text(this.translate.instant('fragments.topicsGraph.title'));
 
 
         // AÑADIMOS EL CONTROLADOR PARA LA GESTIÓN DE FILTROS AL ELEGIR UNA BURBUJA

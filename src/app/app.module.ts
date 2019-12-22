@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -20,7 +22,6 @@ import { ElasticsearchService } from './elasticsearch.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
-import { HttpClientModule } from '@angular/common/http';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -34,6 +35,14 @@ import { FilterPipe } from './filter.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IndexListComponent } from './fragments/index-list/index-list.component';
 import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spinner.component';
+
+
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, '../assets/i18n/client/', '.json');
+}
+
+
 
 
 @NgModule({
@@ -68,7 +77,14 @@ import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spi
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]
