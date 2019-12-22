@@ -1,8 +1,8 @@
 <div id="title-list" class="col-xl-9 col-lg-9 col-md-12 col-xs-12 diagrama offset-xl-3 offset-lg-3 pt-2 pb-2" style="min-height: 200px">
-    <h5 class="card-title mb-4"> Lista de documentos </h5>
+    <h5 class="card-title mb-4"> {{ 'fragments.titleList.title' | translate }} </h5>
     <form id="nfilter" class="example-form center-block">
         <mat-form-field class="example-full-width">
-            <input type="text" [(ngModel)]="searchText" placeholder="Encuentra documentos" aria-label="Number" matInput [formControl]="nFilter">
+            <input type="text" [(ngModel)]="searchText" placeholder="{{ 'fragments.titleList.find' | translate }}" aria-label="Number" matInput [formControl]="nFilter">
         </mat-form-field>
     </form>
     <div class="list-container rounded">
@@ -11,6 +11,6 @@
         </div>
         <loading-spinner [loaded]="totalTitleList.length > 0"></loading-spinner>
         <!-- TODO: Add correct ngIf condition for error text -->
-        <p *ngIf="!totalTitleList.length"> No hay documentos disponibles. </p>
+        <p *ngIf="!totalTitleList.length"> {{ 'fragments.titleList.noDocuments' | translate }} </p>
     </div>
 </div>
