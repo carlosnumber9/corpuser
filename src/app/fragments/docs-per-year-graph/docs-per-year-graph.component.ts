@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { TranslateService } from '@ngx-translate/core';
 
 declare var $: any;
 
@@ -23,7 +24,7 @@ export class DocsPerYearGraphComponent implements OnChanges {
   private GRAPH_BAR_DEFAULT_COLOR = '#00af05'; 
     private GRAPH_BAR_SELECTED_COLOR = '#00ffff'; 
 
-  constructor() { }
+  constructor(private translate: TranslateService) { }
 
   ngOnChanges() {
     if(this.docsPerYearList.length) {
@@ -124,14 +125,14 @@ export class DocsPerYearGraphComponent implements OnChanges {
         .attr('y', margin / 2.4)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
-        .text('Número de documentos');
+        .text(this.translate.instant('fragments.docsPerYearGraph.docCount'));
 
     // AÑADIMOS ETIQUETA PARA EL EJE X
     svg.append('text')
         .attr('x', (width / 2) + margin)
         .attr('y', (height * 1.155) + margin)
         .attr('text-anchor', 'middle')
-        .text('Año de publicación');
+        .text(this.translate.instant('fragments.docsPerYearGraph.postDate'));
 
 
     // TODO: Recover rest variable utility with data service
@@ -162,7 +163,7 @@ export class DocsPerYearGraphComponent implements OnChanges {
         .attr('x', width / 2 + margin)
         .attr('y', 40)
         .attr('text-anchor', 'middle')
-        .text('Cronología del corpus');
+        .text(this.translate.instant('fragments.docsPerYearGraph.title'));
 
 
     // AÑADIMOS EL EFECTO DE CAMBIO DE CURSOR AL PASAR POR ENCIMA.
