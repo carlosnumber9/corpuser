@@ -39,7 +39,7 @@ import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spi
 
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, '../assets/i18n/client/', '.json');
 }
 
 
