@@ -28,10 +28,18 @@ export class AppComponent implements OnInit {
 
     // ---------------------------------------- INIT METHODS ----------------------------------------
 
-
     constructor(public router: Router, public elastic: ElasticsearchService, public translate: TranslateService) {
         this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
-        this.setupi18n();
+        translate.addLangs([
+            CONSTANTS.LANGUAGES.SPANISH.KEY,
+            CONSTANTS.LANGUAGES.ENGLISH.KEY
+        ]);
+        translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
+        const localStorageLanguage = localStorage.getItem('language');
+        const browserLanguage = (localStorageLanguage) ? localStorageLanguage : translate.getBrowserLang();
+        this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
+        translate.use(this.selectedLanguage);
+        localStorage.setItem('language', this.selectedLanguage);    
     }
 
     ngOnInit() {
@@ -43,20 +51,6 @@ export class AppComponent implements OnInit {
 
 
     // ---------------------------------------- AUXILIARY METHODS ----------------------------------------
-
-
-    setupi18n() {
-        this.translate.addLangs([
-            CONSTANTS.LANGUAGES.SPANISH.KEY,
-            CONSTANTS.LANGUAGES.ENGLISH.KEY
-        ]);
-        this.translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
-        const localStorageLanguage = localStorage.getItem('language');
-        const browserLanguage = (localStorageLanguage) ? localStorageLanguage : this.translate.getBrowserLang();
-        this.selectedLanguage = (this.translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
-        this.translate.use(this.selectedLanguage);
-        localStorage.setItem('language', this.selectedLanguage);
-    }
 
     getRouterOutletState(outlet: any) {
         return outlet.isActivated ? outlet.activatedRoute : '';
