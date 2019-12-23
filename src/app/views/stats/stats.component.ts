@@ -4,14 +4,10 @@ import { Index } from '../../index.model';
 import { Document } from '../../document.model';
 import { HttpHeaders } from '@angular/common/http';
 import { ElasticsearchService } from '../../elasticsearch.service';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 
 declare var $: any;
-
 
 @Component({
     selector: 'app-stats',
@@ -34,13 +30,7 @@ export class StatsComponent implements OnInit {
 
     faSync = faSync;
     faTimes = faTimesCircle;
-
-    myControl = new FormControl();
     options: string[] = [];
-    filteredOptions: Observable<string[]>;
-    filteredValue: string[];
-    searchText = '';
-
     objectKeys = Object.keys;
 
     // indices : Lista de índices de Elasticsearch con el número de documentos de cada uno.
@@ -220,13 +210,6 @@ export class StatsComponent implements OnInit {
 
     }
 
-
-    private _filter(value: string, opciones): string[] {
-        const filterValue = value.toLowerCase();
-        return opciones.filter(option => option.toLowerCase().includes(filterValue));
-    }
-
-
     ngOnInit() {
 
         this.index = this.route.snapshot.params.index;
@@ -242,27 +225,11 @@ export class StatsComponent implements OnInit {
         };
 
         this.getTotalTermNameList();
-        this.filteredOptions = this.myControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(value => this._filter(value, this.options))
-            );
 
         this.loaded = {
             dBar1: false,
             dBub1: false
         };
-
-        /*
-        d3.select('#dbub')
-          .attr('width', '700')
-          .attr('height', '400');
-
-        d3.select('#dbar')
-          .attr('width', '700')
-          .attr('height', '450');
-    */
-
 
         this.body = {
             'query': {
@@ -296,7 +263,6 @@ export class StatsComponent implements OnInit {
 
         $('#lista').css('min-height', '580px');
         $('#contlista').css('height', +maxcont + 'px');
-
     }
 
 
@@ -540,7 +506,7 @@ export class StatsComponent implements OnInit {
      */
     private toggleFilter(filterArray: string[], filter: string) {
         let index = filterArray.indexOf(filter);
-        if(index) {
+        if(index < 1) {
             filterArray.splice(index, 1);
         }
         else {

@@ -1,3 +1,10 @@
-<p>
-  item-search-bar works!
-</p>
+<form id="tsearch" class="example-form float-right">
+  <mat-form-field class="example-full-width">
+      <input type="text" placeholder="{{ 'stats.searchBar.search' | translate }}" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option" (click)="addItem(option)">
+              {{ option }}
+          </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+</form>
