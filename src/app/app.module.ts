@@ -35,6 +35,7 @@ import { FilterPipe } from './filter.pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IndexListComponent } from './fragments/index-list/index-list.component';
 import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spinner.component';
+import { ItemSearchBarComponent } from './fragments/item-search-bar/item-search-bar.component';
 
 
 
@@ -57,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     DocsPerYearGraphComponent,
     TitleListComponent,
     IndexListComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    ItemSearchBarComponent
   ],
   imports: [
     BrowserModule,

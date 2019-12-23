@@ -18,20 +18,9 @@
                     </div>
                 </div>
                 <!-- SELECTED FILTERS BLOCK END -->
-                <!-- CORPUS TERM SEARCH BAR -->
                 <div class="col-3">
-                    <form id="tsearch" class="example-form float-right">
-                        <mat-form-field class="example-full-width">
-                            <input type="text" placeholder="{{ 'stats.searchBar.search' | translate }}" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of filteredOptions | async | slice:1:6" [value]="option" (click)="anadirTema(option)">
-                                    {{ option }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </form>
+                    <item-search-bar [total-item-list]="options" [selected-items-list]="tSeleccionados" (itemWasSelected)="onFilterSelection('TOPIC')"></item-search-bar>
                 </div>
-                <!-- CORPUS TERM SEARCH BAR END -->
             </div>
         </div>
     </div>
@@ -39,22 +28,15 @@
 <div class="container-fluid conjunto">
     <div class="row">
         <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
-            <!-- DOCUMENTS PER YEAR BAR GRAPH -->
             <div id="cbar" class="mb-3 diagrama">
                 <docs-per-year-graph [docs-per-year-list]="listaY" [selected-years-list]="aSeleccionados" (yearWasSelected)="onFilterSelection('YEAR')"></docs-per-year-graph>
             </div>
-            <!-- DOCUMENTS PER YEAR BAR GRAPH END -->
-            <!-- TOPICS GRAPH -->
             <div id="cbub" class="mb-3 diagrama">
                 <topics-graph [topic-list]="listaH" [selected-topic-list]="tSeleccionados" (topicWasSelected)="onFilterSelection('TOPIC')"></topics-graph>
             </div>
-            <!-- TOPICS GRAPH END -->
         </div>
-
-        <!-- DOCUMENT TITLE LIST -->
         <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded" style="min-height: 200px">
             <title-list [total-title-list]="nombres" [filtered-id-list]="idSel" [filtered-title-id-list]="idSelName" (titleWasSelected)="filtroNombre($event)"></title-list>
         </div>
-        <!-- DOCUMENT TITLE LIST END -->
     </div>
 </div>
