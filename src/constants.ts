@@ -10,5 +10,6 @@ export const LANGUAGES = {
 
 export const VISUALIZATION_COLORS = {
     GRAPH_BAR_DEFAULT_COLOR: '#00af05',
-    GRAPH_BAR_SELECTED_COLOR:'#00ffff' 
+    GRAPH_BAR_SELECTED_COLOR:'#00ffff',
+    BUBBLE_CHART_HOVER: '#0e9e9e'
 }
