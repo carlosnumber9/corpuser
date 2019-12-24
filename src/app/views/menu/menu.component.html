@@ -1,0 +1,26 @@
+<video autoplay muted loop id="myVideo">
+  <source src="assets/vid/sketch.mp4" type="video/mp4">
+</video>
+
+
+
+
+
+<div class="container-fluid">
+    <div class="menucontent row col-xl-8 col-lg-12 offset-xl-2 offset-lg-0 mt-4">
+        <div id="presentacion" class="menuap col-xl-6 col-lg-8 col-md-12 mb-4">
+            <div class="wrapppp p-3">
+                <h4> {{ 'menu.intro.title' | translate }} </h4>
+                <hr>
+                <p> {{ 'menu.intro.first_paragraph' | translate }} </p>
+                <p> {{ 'menu.intro.second_paragraph' | translate }} </p>
+            </div>
+        </div>
+
+        <div id="lista" class="menuap col-xl-5 col-lg-4 col-md-12 mb-4">
+            <div class="wrapppp p-3">
+                <app-index-list></app-index-list>
+            </div>
+        </div>
+    </div>
+</div>

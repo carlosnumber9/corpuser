@@ -1,6 +1,6 @@
-<p class="mt-4"> Gestiona los documentos que componen tu corpus desde esta página. </p>
+<p class="mt-4"> {{ 'upload.title' | translate }}. </p>
 <div class="row mb-4">
-    <h3 class="col-md-12 text-center">Conexión al servidor de Elasticsearch:
+    <h3 class="col-md-12 text-center">{{ 'upload.elasticConnection' | translate }}:
         <span *ngIf="status == 'OK'" class="badge badge-success"> OK </span>
         <span *ngIf="status != 'OK'" class="badge badge-danger"> ERROR </span>
     </h3>
@@ -9,25 +9,25 @@
     <div class="row">
         <div class="upap col-xl-5 col-lg-8 col-md-8 col-xs-8 offset-1 mb-4">
             <div class="wrapp p-4">
-                <h5> Añade información </h5>
-                <p> Sube documentos al corpus {{ index }} </p>
+                <h5> {{ 'upload.uploader.addInfo' | translate }} </h5>
+                <p> {{ 'upload.uploader.uploadDocuments' | translate }} {{ index }} </p>
                 <div id="dropzone" class="col-6 offset-3 mt-4 align-middle rounded" droppable>
-                    <h5 id="arrastra" class=""> Arrastra los documentos aquí </h5>
+                    <h5 id="arrastra" class=""> {{ 'upload.uploader.drag' | translate }} </h5>
                 </div>
                 <input type="file" id="inputfile" accept="application/*" (change)="changeListener($event)" multiple>
-                <label for="inputfile" class="mt-2 p-3"> Elige los ficheros </label>
+                <label for="inputfile" class="mt-2 p-3"> {{ 'upload.uploader.choose' | translate }} </label>
             </div>
         </div>
         <div class="upap col-xl-4 col-lg-3 col-md-3 col-xs-3 mb-4 ml-4">
             <div class="wrapp p-4">
-                <h5> Cola de almacenamiento </h5>
-                <p *ngIf="fileQueue.length == 0"> Todavía no se han añadido documentos. </p>
+                <h5> {{ 'upload.uploader.queue' | translate }} </h5>
+                <p *ngIf="fileQueue.length == 0"> {{ 'upload.uploader.stillNoFiles' | translate }} </p>
                 <table *ngIf="fileQueue.length > 0" class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Formato</th>
-                            <th scope="col">Opciones</th>
+                            <th scope="col"> {{ 'common.name' | translate }} </th>
+                            <th scope="col"> {{ 'common.format' | translate }} </th>
+                            <th scope="col"> {{ 'common.options' | translate }} </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,8 +35,8 @@
                             <th scope="row">{{ fich.name }}</th>
                             <td> {{ fich.type }} </td>
                             <td>
-                                <button (click)="borrarFich(fich)" class="badge badge-danger"> Quitar de la cola </button>
-                                <button (click)="procesarSubida(fich)" class="badge badge-info"> Añadir al corpus </button>
+                                <button (click)="borrarFich(fich)" class="badge badge-danger"> {{ 'upload.uploader.remove' | translate }} </button>
+                                <button (click)="procesarSubida(fich)" class="badge badge-info"> {{ 'upload.uploader.add' | translate }} </button>
                                 <mat-progress-bar mode="determinate" value="{{ fich.prog }}"></mat-progress-bar>
                                 <span *ngIf="fich.prog == 100" class="badge badge-success">online</span>
                             </td>
@@ -47,8 +47,8 @@
         </div>
     </div>
 </div>
-<button *ngIf="fileQueue.length > 1" (click)="procesarSubida(fileQueue)" class="btn btn-info"> Añadir todo </button>
+<button *ngIf="fileQueue.length > 1" (click)="procesarSubida(fileQueue)" class="btn btn-info"> {{ 'upload.uploader.addAll' | translate }} </button>
 <form [formGroup]="form" (ngSubmit)="limpiar()">
-    <span *ngIf="id == 1" class="badge badge-dark">El corpus está vacío</span>
-    <button *ngIf="id > 1" type="submit" class="btn btn-danger pull-right">Borrar datos del corpus</button>
+    <span *ngIf="id == 1" class="badge badge-dark"> {{ 'upload.uploader.emptyCorpus' | translate }} </span>
+    <button *ngIf="id > 1" type="submit" class="btn btn-danger pull-right"> {{ 'upload.uploader.cleanCorpus' | translate }} </button>
 </form>
