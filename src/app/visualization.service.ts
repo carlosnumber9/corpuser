@@ -13,36 +13,39 @@ export class VisualizationService {
   constructor(private translateService: TranslateService) { }
 
 
-
+  /**
+   * Generates a SVG graph using D3 
+   * @param dataSet 
+   * @param selectedItemsList 
+   * @param svgSelector 
+   */
   public createBarGraph(dataSet: any[], selectedItemsList: any[], svgSelector: d3.Selection<d3.BaseType, unknown, HTMLElement, any>) {
-
-    const that = this;
 
     // DEFINIMOS LAS DIMENSIONES Y MÁRGENES
     const margin = 60;
     const width = 600 - 2 * margin;
     const height = 350 - 2 * margin;
 
-    // CREAMOS LA REGIÓN DEL DIAGRAMA DENTRO DEL SVG
+    // Diagram region creation inside SVG selector
     const chart = svgSelector.append('g')
       .attr('transform', `translate(${margin}, ${margin})`);
 
-    // ESTABLECEMOS LA ESCALA DEL EJE Y
+    // Y-AXIS scale
     const yScale = d3.scaleLinear()
       .range([height, 0])
       .domain([0, d3.max(dataSet.map((s) => s.reps))]);
 
-    // CREAMOS EL EJE Y UTILIZANDO SU ESCALA
+    // Y-AXIS generation
     chart.append('g')
       .call(d3.axisLeft(yScale));
 
-    // ESTABLECEMOS LA ESCALA DEL EJE X
+    // X-AXIS scale
     const xScale = d3.scaleBand()
       .range([0, width])
       .domain(dataSet.map((s) => s.ano))
       .padding(0.2);
 
-    // CREAMOS EL EJE X UTILIZANDO SU ESCALA
+    // X-AXIS generation
     chart.append('g')
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
@@ -69,7 +72,7 @@ export class VisualizationService {
         .tickFormat(''));
     */
 
-    // AÑADIMOS LAS BARRAS PARA CADA ELEMENTO DE LA LISTA (DATOS)
+    // Graph bars addition basing on dataset
     chart.selectAll()
       .data(dataSet)
       .enter()
@@ -89,7 +92,7 @@ export class VisualizationService {
       .attr('id', (s) => s.ano)
       .attr('class', 'bbar');
 
-    // AÑADIMOS ETIQUETA PARA EL EJE Y
+    // Y-AXIS label
     svgSelector.append('text')
       .attr('x', -(height / 2) - margin)
       .attr('y', margin / 2.4)
@@ -97,7 +100,7 @@ export class VisualizationService {
       .attr('text-anchor', 'middle')
       .text(this.translateService.instant('fragments.docsPerYearGraph.docCount'));
 
-    // AÑADIMOS ETIQUETA PARA EL EJE X
+    // X-AXIS label
     svgSelector.append('text')
       .attr('x', (width / 2) + margin)
       .attr('y', (height * 1.155) + margin)
@@ -116,14 +119,14 @@ export class VisualizationService {
     //         .text(aux + ' ' + rest + ' ' + aux1 + ' sin fecha de publicación conocida.');
     // }
 
-    // AÑADIMOS UN TEXTO DE TÍTULO PARA EL DIAGRAMA
+    // Graph title
     svgSelector.append('text')
       .attr('x', width / 2 + margin)
       .attr('y', 40)
       .attr('text-anchor', 'middle')
       .text(this.translateService.instant('fragments.docsPerYearGraph.title'));
 
-    // AÑADIMOS EL EFECTO DE CAMBIO DE CURSOR AL PASAR POR ENCIMA.
+    // Cursor hover animations
     d3.selectAll('rect')
       .on('mouseover', function (actual, i) {
         d3.select(this).style('cursor', 'pointer');
@@ -140,8 +143,7 @@ export class VisualizationService {
           .attr('opacity', '1');
       });
 
-
-    // BORDE DEL DIAGRAMA
+    // Graph border
     svgSelector.append('rect')
       .attr('x', margin)
       .attr('y', margin)
@@ -150,8 +152,5 @@ export class VisualizationService {
       .attr('stroke', 'gray')
       .attr('fill', 'none')
       .attr('stroke-width', 'border');
-
   }
-
-
 }
