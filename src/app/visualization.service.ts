@@ -8,7 +8,9 @@ import { VISUALIZATION_COLORS } from 'src/constants';
 })
 export class VisualizationService {
 
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslateService) { 
+    translateService.use(localStorage.getItem('language'));
+  }
 
 
   /**

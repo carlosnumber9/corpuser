@@ -1,42 +1,87 @@
-<p>
-    {{ 'stats.title' | translate }} {{ index }}.
-</p>
+<div id="main" class="centered">
+  <!-- STATS TITLE -->
+  <div class="content-unit centered">
+    <p>{{ "stats.title" | translate }} {{ index }}.</p>
+  </div>
+  <!-- STATS TITLE END -->
+  <!-- FILTER BAR -->
+  <div class="content-unit page-box space-around">
+    <div>
+      <h5>{{ "stats.filterBar.filters" | translate }}</h5>
+    </div>
+    <div>
+      <div>
+        <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0">
+          {{ "stats.filterBar.noFiltersAvailable" | translate }}
+        </h6>
+      </div>
+      <div>
+        <span
+          *ngFor="let year of aSeleccionados"
+          class="filtro"
+          (click)="addYear(year)"
+        >
+          {{ year }}
+          <fa-icon
+            class="rfilter float-right"
+            (click)="addYear(year)"
+            [icon]="faTimes"
+          ></fa-icon>
+        </span>
+        <span
+          *ngFor="let topic of tSeleccionados"
+          class="filtro"
+          (click)="addTopic(topic)"
+        >
+          {{ topic }}
+          <fa-icon
+            class="rfilter float-right"
+            (click)="addTopic(topic)"
+            [icon]="faTimes"
+          ></fa-icon>
+        </span>
+      </div>
+    </div>
+    <div>
+      <item-search-bar
+        [total-item-list]="options"
+        [selected-items-list]="tSeleccionados"
+        (itemWasSelected)="onFilterSelection('TOPIC')"
+      >
+      </item-search-bar>
+    </div>
+  </div>
+  <!-- FILTER BAR END -->
+  <!-- VISUALIZATIONS COMTAINER -->
+  <div class="content-unit centered">
+    <!-- CHARTS CONTAINER -->
+    <div class="page-box column">
+      <docs-per-year-graph
+        [docs-per-year-list]="listaY"
+        [selected-years-list]="aSeleccionados"
+        (yearWasSelected)="onFilterSelection('YEAR')"
+      >
+      </docs-per-year-graph>
 
-<div class="container-fluid conjunto">
-    <div class="row">
-        <div class="col-xl-10 col-lg-10 col-md-10 col-xs-10 offset-1 diagrama mb-3">
-            <div class="row align-items-center">
-                <div class="col-1">
-                    <h5 class="card-title mt-3 mb-4 float-left mr-4"> {{ 'stats.filterBar.filters' | translate }} </h5>
-                </div>
-                <!-- SELECTED FILTERS BLOCK -->
-                <div id="fcontainer" class="col-8">
-                    <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0" class="card-subtitle text-muted float-left"> {{ 'stats.filterBar.noFiltersAvailable' | translate }} </h6>
-                    <div class="row">
-                        <span *ngFor="let year of aSeleccionados" class="filtro" (click)="addYear(year)"> {{ year }} <fa-icon class="rfilter float-right" (click)="addYear(year)" [icon]="faTimes"></fa-icon> </span>
-                        <span *ngFor="let topic of tSeleccionados" class="filtro" (click)="addTopic(topic)"> {{ topic }} <fa-icon class="rfilter float-right" (click)="addTopic(topic)" [icon]="faTimes"></fa-icon> </span>
-                    </div>
-                </div>
-                <!-- SELECTED FILTERS BLOCK END -->
-                <div class="col-3">
-                    <item-search-bar [total-item-list]="options" [selected-items-list]="tSeleccionados" (itemWasSelected)="onFilterSelection('TOPIC')"></item-search-bar>
-                </div>
-            </div>
-        </div>
+      <topics-graph
+        [topic-list]="listaH"
+        [selected-topic-list]="tSeleccionados"
+        (topicWasSelected)="onFilterSelection('TOPIC')"
+      >
+      </topics-graph>
     </div>
-</div>
-<div class="container-fluid conjunto">
-    <div class="row">
-        <div id="diagramas" class="mr-6 col-xl-5 col-lg-5 offset-xl-1 offset-lg-1 col-md-12 col-xs-12" style="min-height: 200px">
-            <div id="cbar" class="mb-3 diagrama">
-                <docs-per-year-graph [docs-per-year-list]="listaY" [selected-years-list]="aSeleccionados" (yearWasSelected)="onFilterSelection('YEAR')"></docs-per-year-graph>
-            </div>
-            <div id="cbub" class="mb-3 diagrama">
-                <topics-graph [topic-list]="listaH" [selected-topic-list]="tSeleccionados" (topicWasSelected)="onFilterSelection('TOPIC')"></topics-graph>
-            </div>
-        </div>
-        <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12 rounded" style="min-height: 200px">
-            <title-list [total-title-list]="nombres" [filtered-id-list]="idSel" [filtered-title-id-list]="idSelName" (titleWasSelected)="filtroNombre($event)"></title-list>
-        </div>
+    <!-- CHARTS CONTAINER END -->
+    <!-- TITLE LIST CONTAINER -->
+    <div class="page-box column">
+      <title-list
+        [total-title-list]="nombres"
+        [filtered-id-list]="idSel"
+        [filtered-title-id-list]="idSelName"
+        (titleWasSelected)="filtroNombre($event)"
+      >
+      </title-list>
     </div>
+    <!-- TITLE LIST CONTAINER END -->
+  </div>
+  <!-- VISUALIZATIONS CONTAINER END -->
 </div>
