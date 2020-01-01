@@ -1,12 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
-
+/*  */
 
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-
-
 
 body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
 }
+
+.space-around {
+    justify-content: space-around;
+}
+
+.centered {
+    justify-content: center;
+}
+
+.column {
+    flex-direction: column;
+    max-width: 800px;
+}
+
+.page-box {
+    background-color: rgba(255,255,255,0.7);
+    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
+    transition: background-color 300ms ease-in-out;
+}
+
+.page-box:hover {
+    background-color: rgba(255,255,255,1);
+    transition: 300ms ease-in-out;
+  }

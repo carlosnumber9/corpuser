@@ -69,47 +69,15 @@
     background-color: rgba(255,255,255,1);
     transition: 300ms ease-in-out;
   } */
-/* TODO: Check children and parents styles for possible conflicts */
 
-#main {
-    padding: 1px;
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    border: 1px solid black;
-}
+
+/* TODO: Check children and parents styles for possible conflicts */
+/* TODO: Decide whether to apply responsive rules */
 
 .content-unit {
     display: flex;
     max-width: 80%;
-    margin-bottom: 10px;
     align-items: center;
+    margin: auto;
 }
-
-.page-box {
-    background-color: rgba(255,255,255,0.7);
-    -webkit-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-    -moz-box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-    box-shadow: 0px 0px 21px 1px rgba(128,128,128,1);
-    transition: background-color 300ms ease-in-out;
-}
-
-.page-box:hover {
-    background-color: rgba(255,255,255,1);
-    transition: 300ms ease-in-out;
-  }
-
-.space-around {
-    justify-content: space-around;
-}
-
-.centered {
-    justify-content: center;
-}
-
-.column {
-    flex-direction: column;
-    max-width: 800px;
-}
-
 
