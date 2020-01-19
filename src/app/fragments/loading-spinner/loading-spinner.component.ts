@@ -9,6 +9,10 @@ export class LoadingSpinnerComponent {
 
   @Input('loaded') private loaded: boolean;
 
+  color = 'primary';
+  value = 50;
+  mode = 'indeterminate';
+
   constructor() { }
 
 }
