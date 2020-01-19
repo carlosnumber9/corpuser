@@ -1,0 +1,24 @@
+<div class="contenedor">
+    <h4> {{ 'menu.indexList.title' | translate }} </h4>
+    <p> {{ 'menu.indexList.subtitle' | translate }} </p>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column">
+            <loading-spinner [loaded]="loaded"></loading-spinner>
+        </div>
+    </div>
+    <ul id="list" *ngIf="loaded" class="list-group list-group-flush">
+        <li *ngFor="let elem of indices" class="indice list-group-item rounded" (click)="onSelectIndex(elem.index)" [ngClass]="{'selected-index': selectedIndex === elem.index}" id="li{{ elem.index }}">
+            <h6 class="float-left index-name"><strong> {{ elem.index }} </strong></h6>
+            <span class="doccount float-right">{{ elem['docs.count'] }} {{ 'menu.indexList.documents' | translate }}.</span>
+            <span class="badge badge-danger btn-delete" (click)="onDeleteIndex(elem.index)"><fa-icon [icon]="faTimes"></fa-icon></span>
+        </li>
+        <li class="indice list-group-item rounded" id="addIndexLi">
+            <mat-progress-bar *ngIf="!loaded2" mode="indeterminate"></mat-progress-bar>
+            <p *ngIf="!loaded2"> {{ 'menu.indexList.creating' | translate }} </p>
+            <div *ngIf="loaded2" class="form-group row">
+                <input type="text" class="form-control col-8 mr-4" [(ngModel)]="newIndex" placeholder="{{ 'menu.indexList.inputPlaceholder' | translate }}" />
+                <button class="btn" [ngClass]="{'btn-info': newIndex !== ''}" (click)="onCreateIndex(newIndex)"> {{ 'menu.indexList.create' | translate }} </button>
+            </div>
+        </li>
+    </ul>
+</div>

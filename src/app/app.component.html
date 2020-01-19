@@ -1,23 +1,26 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<img class="upmblogo" src="assets/img/upmlogob.png" />
+<img class="upmblogo" src="assets/img/upmlogob.png" alt="UPM"/>
+
+<select #langSelect (change)='selectLanguage(langSelect.value)' class="lang-select">
+    <option disabled> {{ 'app.languageSelector.language' | translate }} </option>
+    <option *ngFor="let language of translate.getLangs()" [value]='language'> {{ language }} </option>
+</select>
 
 <div style="text-align:center" class="titulo">
-    <h1>
-        {{ title }}
-    </h1>
+    <h1> {{ 'app.name' | translate }} </h1>
 </div>
 
 <nav class="container-fluid botonera">
     <div class="row">
         <div id="iniciodiv" (click)="router.navigate([''])" class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 boton border offset-xl-3 offset-lg-2 offset-md-1 offset-sm-1 align-middle p-1 mb-1">
-            Inicio
+            {{ 'app.navBar.home' | translate}}
         </div>
         <div id="datosdiv" (click)="selectedIndex !== '' && router.navigate(['/upload', selectedIndex])" class="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-4 boton border ml-sm-1 ml-0 align-middle p-1 mb-1">
-            Añadir documentos
+            {{ 'app.navBar.addDocuments' | translate }}
         </div>
         <div id="statsdiv" (click)="selectedIndex !== '' && router.navigate(['/stats', selectedIndex])" class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-4 boton border ml-sm-1 ml-0 align-middle p-1">
-            Visualizar datos
+            {{ 'app.navBar.visualizeData' | translate }}
         </div>
     </div>
 </nav>
@@ -36,6 +39,6 @@
         Carlos Pinedo Sánchez <br> Trabajo de Fin de Grado <br> Escuela Técnica Superior de Ingenieros Informáticos <br> Universidad Politécnica de Madrid
     </p>
 
-    <img class="upmflogo" src="assets/img/upmlogo.png" />
+    <img class="upmflogo" src="assets/img/upmlogo.png" alt="UPM"/>
 
 </footer>

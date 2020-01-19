@@ -1,0 +1,85 @@
+  <!-- STATS TITLE -->
+  <div class="content-unit centered">
+    <p>{{ "stats.title" | translate }} {{ index }}.</p>
+  </div>
+  <!-- STATS TITLE END -->
+  <!-- FILTER BAR -->
+  <div class="content-unit page-box space-around">
+    <div>
+      <h5>{{ "stats.filterBar.filters" | translate }}</h5>
+    </div>
+    <div>
+      <div>
+        <h6 *ngIf="tSeleccionados.length == 0 && aSeleccionados.length == 0">
+          {{ "stats.filterBar.noFiltersAvailable" | translate }}
+        </h6>
+      </div>
+      <div>
+        <span
+          *ngFor="let year of aSeleccionados"
+          class="filtro"
+          (click)="addYear(year)"
+        >
+          {{ year }}
+          <fa-icon
+            class="rfilter float-right"
+            (click)="addYear(year)"
+            [icon]="faTimes"
+          ></fa-icon>
+        </span>
+        <span
+          *ngFor="let topic of tSeleccionados"
+          class="filtro"
+          (click)="addTopic(topic)"
+        >
+          {{ topic }}
+          <fa-icon
+            class="rfilter float-right"
+            (click)="addTopic(topic)"
+            [icon]="faTimes"
+          ></fa-icon>
+        </span>
+      </div>
+    </div>
+    <div>
+      <item-search-bar
+        [total-item-list]="options"
+        [selected-items-list]="tSeleccionados"
+        (itemWasSelected)="onFilterSelection('TOPIC')"
+      >
+      </item-search-bar>
+    </div>
+  </div>
+  <!-- FILTER BAR END -->
+  <!-- VISUALIZATIONS COMTAINER -->
+  <div class="content-unit centered">
+    <!-- CHARTS CONTAINER -->
+    <div class="column">
+      <docs-per-year-graph
+        [docs-per-year-list]="listaY"
+        [selected-years-list]="aSeleccionados"
+        (yearWasSelected)="onFilterSelection('YEAR')"
+      >
+      </docs-per-year-graph>
+
+      <topics-graph
+        [topic-list]="listaH"
+        [selected-topic-list]="tSeleccionados"
+        (topicWasSelected)="onFilterSelection('TOPIC')"
+      >
+      </topics-graph>
+    </div>
+    <!-- CHARTS CONTAINER END -->
+    <!-- TITLE LIST CONTAINER -->
+    <div class="column">
+      <title-list
+        [total-title-list]="nombres"
+        [filtered-id-list]="idSel"
+        [filtered-title-id-list]="idSelName"
+        (titleWasSelected)="filtroNombre($event)"
+      >
+      </title-list>
+    </div>
+    <!-- TITLE LIST CONTAINER END -->
+  </div>
+  <!-- VISUALIZATIONS CONTAINER END -->

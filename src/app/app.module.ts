@@ -1,26 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { routing } from './app.routing';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MenuComponent } from './menu/menu.component';
-import { UploadComponent } from './upload/upload.component';
-import { StatsComponent } from './stats/stats.component';
-import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
-import { TopicsGraphComponent } from './stats/topics-graph/topics-graph.component';
-import { DocsPerYearGraphComponent } from './stats/docs-per-year-graph/docs-per-year-graph.component';
-import { TitleListComponent } from './stats/title-list/title-list.component';
+import { MenuComponent } from './views/menu/menu.component';
+import { UploadComponent } from './views/upload/upload.component';
+import { StatsComponent } from './views/stats/stats.component';
+import { NoPageFoundComponent } from './views/no-page-found/no-page-found.component';
+import { TopicsGraphComponent } from './fragments/topics-graph/topics-graph.component';
+import { DocsPerYearGraphComponent } from './fragments/docs-per-year-graph/docs-per-year-graph.component';
+import { TitleListComponent } from './fragments/title-list/title-list.component';
 
 
 import { ElasticsearchService } from './elasticsearch.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 
-import { HttpClientModule } from '@angular/common/http';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -32,7 +33,17 @@ import { MatFormFieldModule, MatInputModule  } from '@angular/material';
 import { FilterPipe } from './filter.pipe';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IndexListComponent } from './menu/index-list/index-list.component';
+import { IndexListComponent } from './fragments/index-list/index-list.component';
+import { LoadingSpinnerComponent } from './fragments/loading-spinner/loading-spinner.component';
+import { ItemSearchBarComponent } from './fragments/item-search-bar/item-search-bar.component';
+
+
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, '../assets/i18n/client/', '.json');
+}
+
+
 
 
 @NgModule({
@@ -46,7 +57,9 @@ import { IndexListComponent } from './menu/index-list/index-list.component';
     TopicsGraphComponent,
     DocsPerYearGraphComponent,
     TitleListComponent,
-    IndexListComponent
+    IndexListComponent,
+    LoadingSpinnerComponent,
+    ItemSearchBarComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +79,14 @@ import { IndexListComponent } from './menu/index-list/index-list.component';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [ElasticsearchService],
   bootstrap: [AppComponent]
