@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
-import { VisualizationService } from 'src/app/visualization.service';
+import { VisualizationService } from 'src/app/services/visualization/visualization.service';
 
 declare var $: any;
 

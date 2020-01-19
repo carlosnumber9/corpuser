@@ -18,7 +18,7 @@ import { DocsPerYearGraphComponent } from './fragments/docs-per-year-graph/docs-
 import { TitleListComponent } from './fragments/title-list/title-list.component';
 
 
-import { ElasticsearchService } from './elasticsearch.service';
+import { ElasticsearchService } from './services/elasticsearch/elasticsearch.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FileUploadModule } from 'ng2-file-upload';
 

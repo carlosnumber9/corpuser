@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ElasticsearchService } from '../../elasticsearch.service';
+import { ElasticsearchService } from '../../services/elasticsearch/elasticsearch.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { fadeAnimation } from '../../animations';

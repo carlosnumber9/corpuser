@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import { Document } from '../../document.model';
-import { ElasticsearchService } from '../../elasticsearch.service';
+import { ElasticsearchService } from '../../services/elasticsearch/elasticsearch.service';
 import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { FILTER_TYPES } from '../../../constants';

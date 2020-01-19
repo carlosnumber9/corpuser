@@ -2,7 +2,7 @@ import {Component, OnInit, HostListener } from '@angular/core';
 import {fadeAnimation} from './animations';
 import {ResizedEvent} from 'angular-resize-event';
 import {Router} from '@angular/router';
-import {ElasticsearchService} from './elasticsearch.service';
+import {ElasticsearchService} from './services/elasticsearch/elasticsearch.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LANGUAGES } from '../constants';
 

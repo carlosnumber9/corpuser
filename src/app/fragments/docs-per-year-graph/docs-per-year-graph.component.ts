@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core
 import * as d3 from 'd3';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
-import { VisualizationService } from 'src/app/visualization.service';
+import { VisualizationService } from 'src/app/services/visualization/visualization.service';
 import { VISUALIZATION_COLORS } from 'src/constants';
 
 declare var $: any;

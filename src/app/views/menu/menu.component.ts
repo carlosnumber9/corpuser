@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ElasticsearchService } from '../../elasticsearch.service';
+import { ElasticsearchService } from '../../services/elasticsearch/elasticsearch.service';
 import { fadeAnimation } from '../../animations';
 
 declare var $: any;

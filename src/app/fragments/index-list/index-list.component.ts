@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { ElasticsearchService } from 'src/app/elasticsearch.service';
+import { ElasticsearchService } from 'src/app/services/elasticsearch/elasticsearch.service';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
