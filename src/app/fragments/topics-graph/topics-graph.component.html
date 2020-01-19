@@ -1,3 +1,7 @@
-<loading-spinner [loaded]="loaded"></loading-spinner>
-<svg class="diag" id="dbub"> </svg>
-<button id="refbub" class="btn btn-refresh" (click)="generateGraph()"> <fa-icon [icon]="faSync"></fa-icon> </button>
+<div class="page-box">
+  <loading-spinner [loaded]="loaded"></loading-spinner>
+  <svg class="diag" id="dbub"></svg>
+  <button id="refbub" class="btn btn-refresh" (click)="generateGraph()">
+    <fa-icon [icon]="faSync"></fa-icon>
+  </button>
+</div>

@@ -4,6 +4,7 @@ import { Document } from '../../document.model';
 import { ElasticsearchService } from '../../elasticsearch.service';
 import { faSync, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
+import { FILTER_TYPES } from '../../../constants';
 
 declare var $: any;
 
@@ -14,10 +15,7 @@ declare var $: any;
 })
 export class StatsComponent implements OnInit {
 
-    private FILTER_TYPES = {
-        TOPIC: 'TOPIC',
-        YEAR: 'YEAR'
-    };
+    
 
     faSync = faSync;
     faTimes = faTimesCircle;
@@ -66,11 +64,11 @@ export class StatsComponent implements OnInit {
 
     private onFilterSelection(filterType: string) {
         switch(filterType) {
-            case this.FILTER_TYPES.TOPIC:
+            case FILTER_TYPES.TOPIC:
                 this.updateBody();
                 this.generateBarGraphData();
                 break;
-            case this.FILTER_TYPES.YEAR:
+            case FILTER_TYPES.YEAR:
                 this.updateBody();
                 this.generateTopicsGraphData();
                  break;
@@ -116,7 +114,6 @@ export class StatsComponent implements OnInit {
         );
     }
 
-
     /**
      * Assigns to nombres array the list of document titles matching current filters
      */
@@ -140,17 +137,27 @@ export class StatsComponent implements OnInit {
     ngOnInit() {
 
         this.index = this.route.snapshot.params.index;
-        this.body.query = {
-            bool: {
-                must: [
-                    {
-                        match_all: {}
-                    }
-                ]
-            }
-        };
 
         this.getTotalTermNameList();
+        this.initBody();
+        this.getDocumentTitles();
+
+        //ACTUALIZAR LISTA DE DOCUMENTOS EN EL ÍNDICE
+        this.lista = this.getTotalDocumentList();
+        Object.assign(this.listaH);
+
+        let htitle = $('#listtitle').outerHeight();
+        let hinput = $('#nfilter').outerHeight();
+        let maxcont = 550 - htitle - hinput;
+
+        $('#lista').css('min-height', '580px');
+        $('#contlista').css('height', +maxcont + 'px');
+    }
+
+    /**
+     * Initializes global variable body for server requests
+     */
+    private initBody() {
         this.body = {
             'query': {
                 'bool': {
@@ -170,18 +177,6 @@ export class StatsComponent implements OnInit {
                 }
             }
         };
-        this.getDocumentTitles();
-
-        //ACTUALIZAR LISTA DE DOCUMENTOS EN EL ÍNDICE
-        this.lista = this.getTotalDocumentList();
-        Object.assign(this.listaH);
-
-        let htitle = $('#listtitle').outerHeight();
-        let hinput = $('#nfilter').outerHeight();
-        let maxcont = 550 - htitle - hinput;
-
-        $('#lista').css('min-height', '580px');
-        $('#contlista').css('height', +maxcont + 'px');
     }
 
     /**
