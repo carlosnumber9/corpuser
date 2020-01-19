@@ -4,7 +4,7 @@ import {ResizedEvent} from 'angular-resize-event';
 import {Router} from '@angular/router';
 import {ElasticsearchService} from './elasticsearch.service';
 import { TranslateService } from '@ngx-translate/core';
-import { CONSTANTS } from '../constants';
+import { LANGUAGES } from '../constants';
 
 declare var $: any;
 
@@ -31,13 +31,13 @@ export class AppComponent implements OnInit {
     constructor(public router: Router, public elastic: ElasticsearchService, public translate: TranslateService) {
         this.elastic.indexSub.subscribe((index) => (this.selectedIndex = index));
         translate.addLangs([
-            CONSTANTS.LANGUAGES.SPANISH.KEY,
-            CONSTANTS.LANGUAGES.ENGLISH.KEY
+            LANGUAGES.SPANISH.KEY,
+            LANGUAGES.ENGLISH.KEY
         ]);
-        translate.setDefaultLang(CONSTANTS.LANGUAGES.SPANISH.KEY);
+        translate.setDefaultLang(LANGUAGES.SPANISH.KEY);
         const localStorageLanguage = localStorage.getItem('language');
         const browserLanguage = (localStorageLanguage) ? localStorageLanguage : translate.getBrowserLang();
-        this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : CONSTANTS.LANGUAGES.SPANISH.KEY;
+        this.selectedLanguage = (translate.getLangs().indexOf(browserLanguage)) ? browserLanguage : LANGUAGES.SPANISH.KEY;
         translate.use(this.selectedLanguage);
         localStorage.setItem('language', this.selectedLanguage);    
     }
