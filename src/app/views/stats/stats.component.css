@@ -72,12 +72,13 @@
 
 
 /* TODO: Check children and parents styles for possible conflicts */
-/* TODO: Decide whether to apply responsive rules */
 
 .content-unit {
     display: flex;
     max-width: 80%;
     align-items: center;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
 }
 
